@@ -5,102 +5,262 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MathZone</title>
+    <title>MathZone | Aprenda, Jogue e Evolua</title>
 
     <link rel="stylesheet" href="./estilo.css">
 </head>
 
 <body>
 
-    <!-- =========================
-         LOGIN
-    ========================= -->
+    <!-- FUNDO COM SÍMBOLOS -->
+    <div class="fundo-matematica">
+        <span>+</span>
+        <span>×</span>
+        <span>÷</span>
+        <span>7</span>
+        <span>π</span>
+        <span>=</span>
+        <span>3</span>
+        <span>%</span>
+        <span>√</span>
+        <span>9</span>
+        <span>∞</span>
+        <span>2</span>
+        <span>★</span>
+        <span>5</span>
+    </div>
 
-    <div id="telaLogin" class="tela-login">
 
-        <div class="login-card">
+    <!-- ============================= -->
+    <!-- LOGIN -->
+    <!-- ============================= -->
 
-            <div class="login-estrelas">
-                ⭐ ✨ ⭐
+    <section id="telaLogin" class="tela-login">
+
+        <div class="login-esquerda">
+
+            <div class="logo-login">
+                <div class="logo-icone">🧮</div>
+
+                <div>
+                    <h1>MathZone</h1>
+                    <p>Corrida • Matemática • Diversão</p>
+                </div>
             </div>
 
-            <div class="login-logo">
-                <div class="login-logo-icon">
-                    🧮
+            <div class="conteudo-login-esquerda">
+
+                <span class="etiqueta">CORRIDA + MATEMÁTICA</span>
+
+                <h2>
+                    Corra. Calcule.<br>
+                    <strong>Evolua no seu ritmo.</strong>
+                </h2>
+
+                <p>
+                    Uma corrida de rua para crianças e iniciantes: resolva contas,
+                    desvie de obstáculos e transforme cada volta em uma conquista.
+                </p>
+
+                <figure class="login-corrida-imagem">
+                    <img
+                        src="./assets/tenis/meninas-correndo-pista.jpg"
+                        alt="Duas meninas correndo juntas em uma pista escolar ao ar livre"
+                        fetchpriority="high"
+                    >
+                    <figcaption>
+                        <span>MISSÕES PARA CRIANÇAS E INICIANTES</span>
+                        <strong>Comece na pista. Continue no seu ritmo.</strong>
+                    </figcaption>
+                </figure>
+
+                <div class="beneficios">
+
+                    <div>
+                        <span>🏃</span>
+                        <div class="beneficio-texto">
+                            <strong>Corra e calcule</strong>
+                            <p>Contas aparecem no percurso.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>🎯</span>
+                        <div class="beneficio-texto">
+                            <strong>Supere desafios</strong>
+                            <p>Desvie, acelere e bata seu recorde.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span>👟</span>
+                        <div class="beneficio-texto">
+                            <strong>Ganhe tênis digitais</strong>
+                            <p>Desbloqueie modelos pela velocidade.</p>
+                        </div>
+                    </div>
+
                 </div>
 
-                <h1>
-                    Math<span>Zone</span>
-                </h1>
-            </div>
+                <div class="conteudos-login">
+                    <span>NA TRILHA, VOCÊ VAI</span>
+                    <div class="topicos-login">
+                        <span>400 m</span>
+                        <span>Contas rápidas</span>
+                        <span>Sprint</span>
+                        <span>Recordes</span>
+                        <span>Recompensas</span>
+                    </div>
+                </div>
 
-            <div class="login-personagem">
-                🚀
-            </div>
+                <div class="login-ritmo">
+                    <span>✦</span>
+                    <div>
+                        <strong>Seu ritmo. Seu desafio. Sua conquista.</strong>
+                        <p>Matemática e movimento para aprender brincando.</p>
+                    </div>
+                </div>
 
-            <h2>Olá! 👋</h2>
-
-            <p>
-                Pronto para se divertir<br>
-                com a matemática?
-            </p>
-
-            <label for="nomeLogin">
-                👧 Seu nome
-            </label>
-
-            <input
-                type="text"
-                id="nomeLogin"
-                placeholder="Digite seu nome"
-                maxlength="20"
-            >
-
-            <label for="senhaLogin">
-                🔐 Sua senha
-            </label>
-
-            <input
-                type="password"
-                id="senhaLogin"
-                placeholder="Digite sua senha"
-                maxlength="20"
-            >
-
-            <button
-                class="botao-entrar"
-                onclick="entrarMathZone()"
-            >
-                🚀 Entrar no MathZone
-            </button>
-
-            <p
-                id="mensagemLogin"
-                class="mensagem-login"
-            ></p>
-
-            <div class="login-frase">
-                🌟 Aprender + Jogar = Diversão! 🌟
             </div>
 
         </div>
 
-    </div>
+
+        <div class="login-direita">
+
+            <div class="login-card">
+
+                <div class="icone-login">
+                    🔐
+                </div>
+
+                <h2>Acesse sua conta</h2>
+
+                <p class="subtitulo-login">
+                    Entre para continuar sua jornada no MathZone.
+                </p>
 
 
-    <!-- =========================
-         SITE PRINCIPAL
-    ========================= -->
+                <form id="formLogin">
 
-    <div id="sitePrincipal">
+                    <div class="campo">
 
-        <!-- CABEÇALHO -->
+                        <label for="emailLogin">
+                            E-mail
+                        </label>
 
-        <header>
+                        <div class="input-container">
 
-            <div class="logo-area" onclick="irPara('inicio')">
+                            <span>✉️</span>
 
-                <div class="logo-pequena">
+                            <input
+                                type="email"
+                                id="emailLogin"
+                                placeholder="Digite seu e-mail"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <div class="senha-titulo">
+
+                            <label for="senhaLogin">
+                                Senha
+                            </label>
+
+                            <button
+                                type="button"
+                                onclick="mostrarSenha()"
+                                class="mostrar-senha"
+                            >
+                                Mostrar senha
+                            </button>
+
+                        </div>
+
+                        <div class="input-container">
+
+                            <span>🔒</span>
+
+                            <input
+                                type="password"
+                                id="senhaLogin"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="botao-entrar"
+                    >
+                        Entrar
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <p id="mensagemLogin" class="mensagem-login"></p>
+
+
+                <div class="linha-ou">
+
+                    <span></span>
+                    <p>ou</p>
+                    <span></span>
+
+                </div>
+
+
+                <div class="novo-usuario">
+
+                    <p>
+                        Ainda não possui uma conta?
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="criarConta()"
+                    >
+                        Criar conta
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- SITE PRINCIPAL -->
+    <!-- ============================= -->
+
+    <div id="sitePrincipal" class="site-principal">
+
+
+        <!-- HEADER -->
+
+        <header class="cabecalho">
+
+            <div class="logo">
+
+                <div class="logo-icone">
                     🧮
                 </div>
 
@@ -114,16 +274,47 @@
 
             <nav>
 
-                <button onclick="irPara('inicio')">
+                <button
+                    type="button"
+                    onclick="irPara('inicio')"
+                >
                     🏠 Início
                 </button>
 
-                <button onclick="irPara('jogos')">
+                <button
+                    type="button"
+                    onclick="irPara('jogos')"
+                >
                     🎮 Jogar
                 </button>
 
-                <button onclick="irPara('videos')">
+                <button
+                    type="button"
+                    onclick="irPara('pets')"
+                >
+                    🐾 Pets
+                </button>
+
+                <button
+                    type="button"
+                    onclick="irPara('videos')"
+                >
                     🎥 Vídeos
+                </button>
+
+                <button
+                    type="button"
+                    onclick="irPara('ranking')"
+                >
+                    🏆 Ranking
+                </button>
+
+                <button
+                    type="button"
+                    onclick="sair()"
+                    class="botao-sair"
+                >
+                    🚪 Sair
                 </button>
 
             </nav>
@@ -131,94 +322,152 @@
         </header>
 
 
-        <!-- =========================
-             INÍCIO
-        ========================= -->
 
         <main>
 
-            <section
-                id="inicio"
-                class="tela ativa"
-            >
+
+            <!-- ============================= -->
+            <!-- INÍCIO -->
+            <!-- ============================= -->
+
+            <section id="inicio" class="tela ativa">
 
                 <div class="hero">
 
-                    <div class="hero-conteudo">
+                    <div class="hero-texto">
 
                         <span class="badge">
-                            🚀 APRENDA DE UM JEITO DIFERENTE
+                            ⭐ APRENDA DE UM JEITO DIFERENTE
                         </span>
 
                         <h2>
-                            Matemática pode ser divertida.
+                            Matemática pode ser
+                            <strong>divertida!</strong>
                         </h2>
 
                         <p>
-                            Aprenda, jogue, resolva desafios
-                            e evolua no MathZone!
+                            Aprenda matemática brincando,
+                            resolva desafios e conquiste pontos
+                            enquanto se diverte.
                         </p>
 
-                        <button
-                            class="botao-principal"
-                            onclick="irPara('jogos')"
-                        >
-                            Começar desafio →
-                        </button>
+                        <div class="hero-botoes">
 
-                        <button
-                            class="botao-video"
-                            onclick="irPara('videos')"
-                        >
-                            🎥 Ver vídeos
-                        </button>
+                            <button
+                                type="button"
+                                onclick="irPara('jogos')"
+                                class="botao-principal"
+                            >
+                                🚀 Começar desafio
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="irPara('videos')"
+                                class="botao-secundario"
+                            >
+                                🎥 Ver videoaulas
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-ilustracao">
+
+                        <div class="circulo-ilustracao">
+                            🧮
+                        </div>
+
+                        <div class="mini-conta conta-1">
+                            2 + 2 = ?
+                        </div>
+
+                        <div class="mini-conta conta-2">
+                            5 × 3
+                        </div>
+
+                        <div class="mini-conta conta-3">
+                            20 ÷ 4
+                        </div>
 
                     </div>
 
                 </div>
 
 
+
+                <!-- CARDS -->
+
                 <div class="recursos">
 
-                    <div class="recurso-card">
-                        <div class="icone">
+                    <div class="recurso-card rosa">
+
+                        <div class="icone-recurso">
                             🎮
                         </div>
 
                         <h3>Desafios</h3>
 
                         <p>
-                            Resolva desafios matemáticos
-                            de forma divertida.
+                            Teste seus conhecimentos
+                            com jogos divertidos.
                         </p>
+
+                        <button
+                            type="button"
+                            onclick="irPara('jogos')"
+                        >
+                            Jogar agora →
+                        </button>
+
                     </div>
 
 
-                    <div class="recurso-card">
-                        <div class="icone">
+                    <div class="recurso-card amarelo">
+
+                        <div class="icone-recurso">
                             🎥
                         </div>
 
                         <h3>Videoaulas</h3>
 
                         <p>
-                            Aprenda matemática com
-                            vídeos educativos.
+                            Aprenda matemática de um
+                            jeito simples.
                         </p>
+
+                        <button
+                            type="button"
+                            onclick="irPara('videos')"
+                        >
+                            Assistir →
+                        </button>
+
                     </div>
 
 
-                    <div class="recurso-card">
-                        <div class="icone">
-                            🏆
+                    <div class="recurso-card verde">
+
+                        <div class="icone-recurso">
+                            ⭐
                         </div>
 
                         <h3>Evolução</h3>
 
                         <p>
-                            Jogue, marque pontos
-                            e melhore seus conhecimentos.
+                            Resolva desafios e conquiste
+                            pontos.
                         </p>
+
+                        <button
+                            type="button"
+                            onclick="irPara('jogos')"
+                        >
+                            Começar →
+                        </button>
+
                     </div>
 
                 </div>
@@ -226,27 +475,24 @@
             </section>
 
 
-            <!-- =========================
-                 JOGOS
-            ========================= -->
 
-            <section
-                id="jogos"
-                class="tela"
-            >
+            <!-- ============================= -->
+            <!-- JOGOS -->
+            <!-- ============================= -->
 
-                <div class="titulo-pagina">
+            <section id="jogos" class="tela">
 
-                    <span>
-                        🎮
-                    </span>
+                <div class="titulo-secao">
+
+                    <span>🎮</span>
 
                     <h2>
-                        Jogos Matemáticos
+                        Hora do desafio!
                     </h2>
 
                     <p>
-                        Escolha um desafio e divirta-se!
+                        Escolha um jogo e coloque seus conhecimentos
+                        de matemática à prova.
                     </p>
 
                 </div>
@@ -257,14 +503,14 @@
 
                     <!-- QUIZ -->
 
-                    <div class="jogo-card">
+                    <div class="jogo-card jogo-rosa">
 
-                        <div class="jogo-numero">
+                        <span class="numero-desafio">
                             DESAFIO 01
-                        </div>
+                        </span>
 
-                        <div class="jogo-icone">
-                            🧠
+                        <div class="icone-jogo">
+                            🧮
                         </div>
 
                         <h3>
@@ -272,14 +518,14 @@
                         </h3>
 
                         <p>
-                            Responda perguntas
-                            e conquiste pontos.
+                            Responda perguntas e conquiste pontos!
                         </p>
 
                         <button
+                            type="button"
                             onclick="abrirQuiz()"
                         >
-                            Jogar agora 🎮
+                            Jogar agora 🚀
                         </button>
 
                     </div>
@@ -287,14 +533,14 @@
 
                     <!-- DETETIVE -->
 
-                    <div class="jogo-card">
+                    <div class="jogo-card jogo-amarelo">
 
-                        <div class="jogo-numero">
+                        <span class="numero-desafio">
                             DESAFIO 02
-                        </div>
+                        </span>
 
-                        <div class="jogo-icone">
-                            🕵️
+                        <div class="icone-jogo">
+                            🔎
                         </div>
 
                         <h3>
@@ -302,14 +548,14 @@
                         </h3>
 
                         <p>
-                            Descubra as respostas
-                            usando as pistas.
+                            Resolva os mistérios usando matemática.
                         </p>
 
                         <button
+                            type="button"
                             onclick="abrirDetetive()"
                         >
-                            Jogar agora 🔎
+                            Investigar 🔎
                         </button>
 
                     </div>
@@ -317,89 +563,110 @@
 
                     <!-- CORRIDA -->
 
-                    <div class="jogo-card">
+                    <div class="jogo-card jogo-corrida">
 
-                        <div class="jogo-numero">
-                            DESAFIO 03
-                        </div>
+                        <span class="numero-desafio">DESAFIO 03</span>
 
-                        <div class="jogo-icone">
-                            🏃
-                        </div>
+                        <div class="icone-jogo" aria-hidden="true">🏃</div>
 
-                        <h3>
-                            Corrida Matemática
-                        </h3>
+                        <h3>Corrida de Rua</h3>
 
-                        <p>
-                            Resolva as contas e
-                            avance na corrida.
-                        </p>
+                        <p>Corra 400 m, desvie dos cones e resolva contas nos portais matemáticos.</p>
 
-                        <button
-                            onclick="abrirCorrida()"
-                        >
-                            Correr agora 🏃
+                        <button type="button" onclick="abrirCorrida()">
+                            Alinhar na largada →
                         </button>
 
                     </div>
 
-
-                    <!-- MATHRUN -->
-
-                    <div class="jogo-card destaque">
-
-                        <div class="jogo-numero">
-                            DESAFIO 04
-                        </div>
-
-                        <div class="jogo-icone">
-                            🏃‍♂️
-                        </div>
-
-                        <h3>
-                            MathRun
-                        </h3>
-
-                        <p>
-                            Corra até a chegada
-                            resolvendo matemática!
-                        </p>
-
-                        <button
-                            onclick="abrirMathRun()"
-                        >
-                            Começar corrida 🚀
-                        </button>
-
-                    </div>
 
                 </div>
 
             </section>
 
 
-            <!-- =========================
-                 VÍDEOS
-            ========================= -->
 
-            <section
-                id="videos"
-                class="tela"
-            >
+            <!-- ============================= -->
+            <!-- PETS -->
+            <!-- ============================= -->
 
-                <div class="titulo-pagina">
+            <section id="pets" class="tela">
 
-                    <span>
-                        🎥
-                    </span>
+                <div class="titulo-secao">
+                    <span>🐾</span>
+                    <h2>Seu cantinho pet</h2>
+                    <p>Responda corretamente, junte pontos e adote novos companheiros.</p>
+                </div>
+
+                <div class="carteira-pets">
+                    <div>
+                        <span>Seus pontos</span>
+                        <strong id="saldoPets">0 pts</strong>
+                    </div>
+                    <div>
+                        <span>Pets na coleção</span>
+                        <strong id="totalPets">0 pets</strong>
+                    </div>
+                    <p id="mensagemPets" role="status" aria-live="polite"></p>
+                </div>
+
+                <div id="petAtivo" class="pet-destaque"></div>
+
+                <div class="titulo-loja">
+                    <div>
+                        <h3>Loja de pets</h3>
+                        <p>Escolha um companheiro para adotar.</p>
+                    </div>
+                </div>
+                <div id="lojaPets" class="loja-pets"></div>
+
+                <div class="titulo-loja titulo-colecao">
+                    <div>
+                        <h3>Minha coleção</h3>
+                        <p>Equipe qualquer pet que você já adotou.</p>
+                    </div>
+                </div>
+                <div id="colecaoPets" class="colecao-pets"></div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- RANKING -->
+
+            <section id="ranking" class="tela">
+
+                <div class="titulo-secao">
+                    <span>🏆</span>
+                    <h2>Ranking MathZone</h2>
+                    <p>Pódio dos jogadores com mais pontos acumulados neste dispositivo.</p>
+                </div>
+
+                <div id="podioRanking" class="podio-ranking" aria-label="Pódio dos três primeiros jogadores"></div>
+
+                <div id="demaisRanking" class="demais-ranking">
+                    <h3>Classificação geral</h3>
+                    <ol id="listaRanking"></ol>
+                </div>
+
+            </section>
+
+
+            <!-- VIDEOS -->
+            <!-- ============================= -->
+
+            <section id="videos" class="tela">
+
+                <div class="titulo-secao">
+
+                    <span>🎥</span>
 
                     <h2>
-                        Videoaulas
+                        Aprenda com videoaulas
                     </h2>
 
                     <p>
-                        Aprenda matemática de um jeito fácil!
+                        Escolha um assunto e aprenda de forma simples.
                     </p>
 
                 </div>
@@ -407,11 +674,10 @@
 
                 <div class="videos-grid">
 
-                    <div class="video-card">
 
-                        <div class="video-imagem">
-                            ➕
-                        </div>
+                    <div class="video-card rosa-claro">
+
+                        <div>➕</div>
 
                         <h3>
                             Adição
@@ -422,19 +688,18 @@
                         </p>
 
                         <button
-                            onclick="assistirVideo('Adição matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('adição matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
 
 
-                    <div class="video-card">
+                    <div class="video-card amarelo-claro">
 
-                        <div class="video-imagem">
-                            ➖
-                        </div>
+                        <div>➖</div>
 
                         <h3>
                             Subtração
@@ -445,42 +710,40 @@
                         </p>
 
                         <button
-                            onclick="assistirVideo('Subtração matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('subtração matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
 
 
-                    <div class="video-card">
+                    <div class="video-card verde-claro">
 
-                        <div class="video-imagem">
-                            ✖️
-                        </div>
+                        <div>✖️</div>
 
                         <h3>
                             Multiplicação
                         </h3>
 
                         <p>
-                            Aprenda multiplicação.
+                            Aprenda a multiplicar.
                         </p>
 
                         <button
-                            onclick="assistirVideo('Multiplicação matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('multiplicação matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
 
 
-                    <div class="video-card">
+                    <div class="video-card laranja-claro">
 
-                        <div class="video-imagem">
-                            ➗
-                        </div>
+                        <div>➗</div>
 
                         <h3>
                             Divisão
@@ -491,42 +754,40 @@
                         </p>
 
                         <button
-                            onclick="assistirVideo('Divisão matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('divisão matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
 
 
-                    <div class="video-card">
+                    <div class="video-card roxo-claro">
 
-                        <div class="video-imagem">
-                            🍕
-                        </div>
+                        <div>🍕</div>
 
                         <h3>
                             Frações
                         </h3>
 
                         <p>
-                            Aprenda frações.
+                            Entenda as frações.
                         </p>
 
                         <button
-                            onclick="assistirVideo('Frações matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('frações matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
 
 
-                    <div class="video-card">
+                    <div class="video-card rosa-claro">
 
-                        <div class="video-imagem">
-                            💯
-                        </div>
+                        <div>💯</div>
 
                         <h3>
                             Porcentagem
@@ -537,12 +798,14 @@
                         </p>
 
                         <button
-                            onclick="assistirVideo('Porcentagem matemática ensino fundamental')"
+                            type="button"
+                            onclick="assistirVideo('porcentagem matemática ensino fundamental')"
                         >
-                            ▶ Assistir
+                            Assistir ▶
                         </button>
 
                     </div>
+
 
                 </div>
 
@@ -551,206 +814,197 @@
         </main>
 
 
-        <!-- =========================
-             MODAL DOS JOGOS
-        ========================= -->
-
-        <div
-            id="modalJogo"
-            class="modal"
-        >
-
-            <div class="modal-conteudo">
-
-                <button
-                    class="fechar"
-                    onclick="fecharJogo()"
-                >
-                    ✕
-                </button>
-
-
-                <!-- QUIZ -->
-
-                <div
-                    id="quiz"
-                    class="jogo-area"
-                >
-
-                    <h2>
-                        🧠 Quiz MathZone
-                    </h2>
-
-                    <div
-                        id="quizPergunta"
-                        class="pergunta"
-                    >
-                    </div>
-
-                    <div
-                        id="quizRespostas"
-                        class="respostas"
-                    >
-                    </div>
-
-                    <p id="quizMensagem"></p>
-
-                    <p id="quizPontos">
-                        Pontos: 0
-                    </p>
-
-                </div>
-
-
-                <!-- DETETIVE -->
-
-                <div
-                    id="detetive"
-                    class="jogo-area"
-                >
-
-                    <h2>
-                        🕵️ Detetive Matemático
-                    </h2>
-
-                    <p id="detetivePista"></p>
-
-                    <input
-                        type="number"
-                        id="respostaDetetive"
-                        placeholder="Digite sua resposta"
-                    >
-
-                    <button
-                        onclick="responderDetetive()"
-                    >
-                        🔎 Descobrir
-                    </button>
-
-                    <p id="detetiveMensagem"></p>
-
-                    <p id="detetivePontos">
-                        Pontos: 0
-                    </p>
-
-                </div>
-
-
-                <!-- CORRIDA MATEMÁTICA -->
-
-                <div
-                    id="corrida"
-                    class="jogo-area"
-                >
-
-                    <h2>
-                        🏃 Corrida Matemática
-                    </h2>
-
-                    <div class="corrida-pista">
-
-                        <div class="linha-chegada">
-                            🏁
-                        </div>
-
-                        <div
-                            id="corredor"
-                            class="corredor"
-                        >
-                            🏃
-                        </div>
-
-                    </div>
-
-                    <div
-                        id="corridaPergunta"
-                        class="pergunta"
-                    >
-                    </div>
-
-                    <div
-                        id="corridaRespostas"
-                        class="respostas"
-                    >
-                    </div>
-
-                    <p id="corridaMensagem"></p>
-
-                </div>
-
-
-                <!-- MATHRUN -->
-
-                <div
-                    id="mathrun"
-                    class="jogo-area"
-                >
-
-                    <h2>
-                        🚀 MathRun
-                    </h2>
-
-                    <p>
-                        Resolva as contas para seu
-                        corredor chegar ao final!
-                    </p>
-
-                    <div class="mathrun-pista">
-
-                        <div class="chegada">
-                            🏁
-                        </div>
-
-                        <div
-                            id="mathrunCorredor"
-                            class="corredor"
-                        >
-                            🏃‍♂️
-                        </div>
-
-                    </div>
-
-                    <div
-                        id="mathrunPergunta"
-                        class="pergunta"
-                    >
-                    </div>
-
-                    <div
-                        id="mathrunRespostas"
-                        class="respostas"
-                    >
-                    </div>
-
-                    <p id="mathrunMensagem"></p>
-
-                    <div class="turbo-area">
-
-                        <button
-                            class="turbo"
-                            onclick="usarTurbo()"
-                        >
-                            ⚡ TURBO
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
         <!-- RODAPÉ -->
 
         <footer>
 
             <p>
-                🧮 MathZone — Aprender matemática pode ser divertido! 🚀
+                🚀 MathZone — Aprender matemática pode ser divertido!
             </p>
 
         </footer>
+
+    </div>
+
+
+
+    <!-- ============================= -->
+    <!-- MODAL DOS JOGOS -->
+    <!-- ============================= -->
+
+    <div id="modalJogo" class="modal">
+
+        <div class="modal-conteudo">
+
+            <button
+                type="button"
+                class="fechar-modal"
+                onclick="fecharJogo()"
+            >
+                ✕
+            </button>
+
+
+            <!-- QUIZ -->
+
+            <div id="quiz" class="jogo-area">
+
+                <span class="tag-jogo">
+                    🧮 QUIZ MATHZONE
+                </span>
+
+                <h2>
+                    Responda corretamente!
+                </h2>
+
+                <p id="pontos">
+                    Pontos: 0
+                </p>
+
+                <div class="pergunta">
+
+                    <p id="perguntaQuiz">
+                        Pergunta
+                    </p>
+
+                </div>
+
+                <div
+                    id="respostasQuiz"
+                    class="respostas"
+                ></div>
+
+                <p id="resultadoQuiz"></p>
+
+            </div>
+
+
+
+            <!-- DETETIVE -->
+
+            <div id="detetive" class="jogo-area">
+
+                <span class="tag-jogo">
+                    🔎 DETETIVE MATEMÁTICO
+                </span>
+
+                <h2>
+                    Descubra a resposta!
+                </h2>
+
+                <p id="pontosDetetive">
+                    Pontos: 0
+                </p>
+
+                <div class="pergunta">
+
+                    <p id="perguntaDetetive">
+                        Pergunta
+                    </p>
+
+                </div>
+
+                <input
+                    type="number"
+                    id="respostaDetetive"
+                    placeholder="Digite sua resposta"
+                >
+
+                <button
+                    type="button"
+                    onclick="responderDetetive()"
+                    class="botao-jogo"
+                >
+                    🔎 Investigar
+                </button>
+
+                <p id="resultadoDetetive"></p>
+
+            </div>
+
+
+            <!-- CORRIDA DE RUA -->
+
+            <div id="corrida" class="jogo-area jogo-corrida-area">
+
+                <div class="corrida-topo">
+                    <div>
+                        <span class="tag-jogo">🏁 DESAFIO DE RUA · INICIANTE</span>
+                        <h2>Corrida de estreia</h2>
+                        <p>400 m de ritmo leve. Encontre seu caminho, sem pressa.</p>
+                    </div>
+                    <span class="corrida-selo">PROVA 01 <strong>400 m</strong></span>
+                </div>
+
+                <div class="corrida-hud" aria-label="Dados da corrida">
+                    <div><span>DISTÂNCIA</span><strong id="corridaDistancia">0 <small>/ 400 m</small></strong></div>
+                    <div><span>TEMPO</span><strong id="corridaTempo">00:00</strong></div>
+                    <div><span>VELOCIDADE</span><strong id="corridaVelocidade">0,0 km/h</strong></div>
+                    <div><span>PICO</span><strong id="corridaPico">0,0 km/h</strong></div>
+                    <div><span>FÔLEGO</span><strong id="corridaFolego">100%</strong></div>
+                    <div><span>SEU RECORDE</span><strong id="corridaRecorde">—</strong></div>
+                </div>
+
+                <div class="corrida-progresso" aria-label="Progresso da corrida">
+                    <span id="corridaBarra"></span>
+                </div>
+
+                <canvas id="corridaCanvas" class="corrida-canvas" width="960" height="400" role="img" aria-label="Pista de corrida com três faixas, corredor e obstáculos"></canvas>
+
+                <div id="checkpointMatematico" class="checkpoint-matematico" hidden>
+                    <div>
+                        <span id="etiquetaCheckpoint">PORTAL MATEMÁTICO</span>
+                        <strong id="perguntaCheckpoint"></strong>
+                    </div>
+                    <div id="respostasCheckpoint" class="respostas-checkpoint"></div>
+                </div>
+
+                <p id="mensagemCorrida" class="mensagem-corrida" role="status" aria-live="polite">
+                    Escolha uma faixa e prepare-se para sua primeira volta.
+                </p>
+
+                <div class="corrida-acoes">
+                    <button id="botaoIniciarCorrida" type="button" class="botao-jogo" onclick="iniciarCorrida()">Começar corrida</button>
+                    <button id="botaoPausarCorrida" type="button" class="botao-corrida-secundario" onclick="alternarPausaCorrida()" hidden>Pausar</button>
+                </div>
+
+                <div class="controles-corrida" aria-label="Controles de toque">
+                    <button type="button" aria-label="Mudar para a faixa da esquerda" onclick="moverCorredor(-1)">←</button>
+                    <button type="button" class="botao-pular" aria-label="Pular obstáculo" onclick="pularObstaculo()">Pular</button>
+                    <button type="button" class="botao-sprint" aria-label="Segure para acelerar" onpointerdown="definirSprint(true)" onpointerup="definirSprint(false)" onpointerleave="definirSprint(false)" onpointercancel="definirSprint(false)">Acelerar</button>
+                    <button type="button" aria-label="Mudar para a faixa da direita" onclick="moverCorredor(1)">→</button>
+                </div>
+
+                <div class="corrida-rodape">
+                    <span>← → trocar de faixa</span>
+                    <span>Espaço / ↑ pular</span>
+                    <span>Shift acelerar</span>
+                    <span>P para pausar</span>
+                </div>
+
+                <section class="premios-corrida" aria-labelledby="tituloPremiosCorrida">
+                    <div class="premios-corrida-topo">
+                        <div>
+                            <span>RECOMPENSAS DIGITAIS</span>
+                            <h3 id="tituloPremiosCorrida">Vitrine de tênis</h3>
+                            <p>Melhor média: <strong id="melhorMediaTenisCorrida">—</strong></p>
+                        </div>
+                        <p>Fotos ilustrativas de tênis reais. Prêmios virtuais, sem entrega física.</p>
+                    </div>
+                    <div id="galeriaTenisCorrida" class="galeria-tenis-corrida"></div>
+                    <div class="tenis-equipado-area">
+                        <h4>Tênis selecionado</h4>
+                        <div id="tenisEquipadoCorrida" class="tenis-equipado-corrida"></div>
+                    </div>
+                    <div class="colecao-tenis-area">
+                        <h4>Minha coleção</h4>
+                        <div id="colecaoTenisCorrida" class="colecao-tenis-corrida"></div>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
 
     </div>
 
