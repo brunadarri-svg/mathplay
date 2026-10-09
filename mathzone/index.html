@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MathZone | Aprenda, Jogue e Evolua</title>
+    <meta name="description" content="Treine matemática do Ensino Fundamental em uma pista de corrida cheia de desafios, estratégia e conquistas.">
+    <meta name="theme-color" content="#102b3f">
+
+    <title>MathZone | Corrida, Matemática e Desafios</title>
 
     <link rel="stylesheet" href="./estilo.css">
 </head>
@@ -40,26 +43,28 @@
         <div class="login-esquerda">
 
             <div class="logo-login">
-                <div class="logo-icone">🧮</div>
+                <div class="logo-icone">
+                    <img src="./assets/mathzone-mark.svg" alt="">
+                </div>
 
                 <div>
                     <h1>MathZone</h1>
-                    <p>Corrida • Matemática • Diversão</p>
+                    <p>Pista de corrida matemática</p>
                 </div>
             </div>
 
             <div class="conteudo-login-esquerda">
 
-                <span class="etiqueta">CORRIDA + MATEMÁTICA</span>
+                <span class="etiqueta">PISTA DE CORRIDA MATEMÁTICA</span>
 
                 <h2>
-                    Corra. Calcule.<br>
-                    <strong>Evolua no seu ritmo.</strong>
+                    Treine a mente.<br>
+                    <strong>Dispare na pista.</strong>
                 </h2>
 
                 <p>
-                    Uma corrida de rua para crianças e iniciantes: resolva contas,
-                    desvie de obstáculos e transforme cada volta em uma conquista.
+                    Um circuito interativo para o Ensino Fundamental: resolva problemas
+                    de verdade, escolha sua estratégia e cruze a linha de chegada.
                 </p>
 
                 <figure class="login-corrida-imagem">
@@ -69,8 +74,8 @@
                         fetchpriority="high"
                     >
                     <figcaption>
-                        <span>MISSÕES PARA CRIANÇAS E INICIANTES</span>
-                        <strong>Comece na pista. Continue no seu ritmo.</strong>
+                        <span>MATEMÁTICA EM MOVIMENTO</span>
+                        <strong>Cada volta treina uma nova habilidade.</strong>
                     </figcaption>
                 </figure>
 
@@ -79,45 +84,45 @@
                     <div>
                         <span>🏃</span>
                         <div class="beneficio-texto">
-                            <strong>Corra e calcule</strong>
-                            <p>Contas aparecem no percurso.</p>
+                            <strong>Resolva em movimento</strong>
+                            <p>Desafios matemáticos em cada trecho.</p>
                         </div>
                     </div>
 
                     <div>
                         <span>🎯</span>
                         <div class="beneficio-texto">
-                            <strong>Supere desafios</strong>
-                            <p>Desvie, acelere e bata seu recorde.</p>
+                            <strong>Suba de nível</strong>
+                            <p>Frações, medidas, lógica e estratégia.</p>
                         </div>
                     </div>
 
                     <div>
                         <span>👟</span>
                         <div class="beneficio-texto">
-                            <strong>Ganhe tênis digitais</strong>
-                            <p>Desbloqueie modelos pela velocidade.</p>
+                            <strong>Conquiste a pista</strong>
+                            <p>Some pontos, recordes e recompensas.</p>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="conteudos-login">
-                    <span>NA TRILHA, VOCÊ VAI</span>
+                    <span>TREINOS PARA O ENSINO FUNDAMENTAL</span>
                     <div class="topicos-login">
                         <span>400 m</span>
-                        <span>Contas rápidas</span>
-                        <span>Sprint</span>
-                        <span>Recordes</span>
-                        <span>Recompensas</span>
+                        <span>Frações</span>
+                        <span>Porcentagem</span>
+                        <span>Geometria</span>
+                        <span>Desafios 5º–9º ano</span>
                     </div>
                 </div>
 
                 <div class="login-ritmo">
                     <span>✦</span>
                     <div>
-                        <strong>Seu ritmo. Seu desafio. Sua conquista.</strong>
-                        <p>Matemática e movimento para aprender brincando.</p>
+                        <strong>Estratégia na cabeça. Energia na pista.</strong>
+                        <p>Aprenda matemática avançada jogando.</p>
                     </div>
                 </div>
 
@@ -131,17 +136,17 @@
             <div class="login-card">
 
                 <div class="icone-login">
-                    🔐
+                    <img src="./assets/mathzone-mark.svg" alt="">
                 </div>
 
-                <h2>Acesse sua conta</h2>
+                <h2>Entre na sua pista</h2>
 
                 <p class="subtitulo-login">
-                    Entre para continuar sua jornada no MathZone.
+                    Acesse seus treinos, recordes e conquistas.
                 </p>
 
 
-                <form id="formLogin">
+                <form id="formLogin" onsubmit="entrarMathZone(event)">
 
                     <div class="campo">
 
@@ -201,21 +206,95 @@
                     </div>
 
 
-                    <button
-                        type="submit"
-                        class="botao-entrar"
-                    >
+                    <button type="submit" class="botao-entrar">
                         Entrar
                         <span>→</span>
                     </button>
 
                 </form>
 
+                <form id="formCadastro" onsubmit="cadastrarConta(event)" hidden>
+                    <div class="campo">
+                        <label for="nomeCadastro">Como podemos chamar você?</label>
+                        <div class="input-container">
+                            <span aria-hidden="true">Aa</span>
+                            <input
+                                type="text"
+                                id="nomeCadastro"
+                                name="nome"
+                                placeholder="Seu nome ou apelido"
+                                autocomplete="name"
+                                minlength="2"
+                                maxlength="40"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                <p id="mensagemLogin" class="mensagem-login"></p>
+                    <div class="campo">
+                        <label for="emailCadastro">E-mail</label>
+                        <div class="input-container">
+                            <span aria-hidden="true">✉</span>
+                            <input
+                                type="email"
+                                id="emailCadastro"
+                                name="email"
+                                placeholder="voce@exemplo.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <div class="senha-titulo">
+                            <label for="senhaCadastro">Crie uma senha</label>
+                            <button type="button" onclick="alternarVisibilidadeSenha('senhaCadastro', this)" class="mostrar-senha">Mostrar senha</button>
+                        </div>
+                        <div class="input-container">
+                            <span aria-hidden="true">●</span>
+                            <input
+                                type="password"
+                                id="senhaCadastro"
+                                name="senha"
+                                placeholder="Pelo menos 8 caracteres"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <label for="confirmarSenhaCadastro">Confirme sua senha</label>
+                        <div class="input-container">
+                            <span aria-hidden="true">✓</span>
+                            <input
+                                type="password"
+                                id="confirmarSenhaCadastro"
+                                name="confirmarSenha"
+                                placeholder="Digite a senha novamente"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <p class="aviso-conta-local">
+                        Conta demonstrativa: os dados ficam somente neste navegador. Não use uma senha que você usa em outros sites.
+                    </p>
+                    <button type="submit" class="botao-entrar">
+                        Criar minha conta
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </form>
 
 
-                <div class="linha-ou">
+                <p id="mensagemLogin" class="mensagem-login" role="status" aria-live="polite"></p>
+
+
+                <div id="linhaOuLogin" class="linha-ou">
 
                     <span></span>
                     <p>ou</p>
@@ -224,7 +303,7 @@
                 </div>
 
 
-                <div class="novo-usuario">
+                <div id="alternarContaLogin" class="novo-usuario">
 
                     <p>
                         Ainda não possui uma conta?
@@ -239,11 +318,48 @@
 
                 </div>
 
+                <div id="alternarContaCadastro" class="novo-usuario" hidden>
+                    <p>Já possui uma conta neste navegador?</p>
+                    <button type="button" onclick="mostrarLogin()">Voltar para entrar</button>
+                </div>
+
             </div>
 
         </div>
 
     </section>
+
+    <aside class="acessibilidade-widget" aria-label="Recursos de acessibilidade">
+        <button
+            id="botaoAcessibilidade"
+            class="botao-acessibilidade"
+            type="button"
+            aria-expanded="false"
+            aria-controls="painelAcessibilidade"
+            onclick="alternarPainelAcessibilidade()"
+        >
+            <span aria-hidden="true">Aa</span> Acessibilidade
+        </button>
+        <section id="painelAcessibilidade" class="painel-acessibilidade" aria-labelledby="tituloAcessibilidade" hidden>
+            <div class="painel-acessibilidade-topo">
+                <div>
+                    <span>INCLUSÃO MATHZONE</span>
+                    <h2 id="tituloAcessibilidade">Apoio visual</h2>
+                </div>
+                <button type="button" class="fechar-acessibilidade" aria-label="Fechar recursos de acessibilidade" onclick="alternarPainelAcessibilidade(false)">×</button>
+            </div>
+            <p>Para pessoas surdas ou que preferem acompanhar sem áudio: instruções e avisos são apresentados por escrito.</p>
+            <label class="alternancia-acessibilidade" for="modoVisualSurdo">
+                <span>
+                    <strong>Ativar modo visual</strong>
+                    <small>Destaca avisos escritos e descrições dos vídeos.</small>
+                </span>
+                <input id="modoVisualSurdo" type="checkbox" onchange="definirModoVisualSurdo(this.checked)">
+            </label>
+            <p class="nota-libras">As videoaulas abrem no YouTube; quando o modo visual estiver ativo, a busca prioriza vídeos que mencionem legendas. A tradução em Libras ainda não está integrada.</p>
+        </section>
+    </aside>
+    <p id="avisoModoVisual" class="aviso-modo-visual" role="status" aria-live="polite" hidden></p>
 
 
 
@@ -261,63 +377,95 @@
             <div class="logo">
 
                 <div class="logo-icone">
-                    🧮
+                    <img src="./assets/mathzone-mark.svg" alt="">
                 </div>
 
                 <div>
                     <h1>MathZone</h1>
-                    <p>Matemática divertida</p>
+                    <p>Corrida • Matemática • Conquistas</p>
                 </div>
 
             </div>
 
 
-            <nav>
+            <div class="cabecalho-menu">
+                <nav class="nav-principal" aria-label="Navegação principal">
 
                 <button
                     type="button"
+                    aria-current="page"
+                    data-tela="inicio"
                     onclick="irPara('inicio')"
                 >
-                    🏠 Início
+                    Início
                 </button>
 
                 <button
                     type="button"
+                    data-tela="jogos"
                     onclick="irPara('jogos')"
                 >
-                    🎮 Jogar
+                    Treinos
                 </button>
 
                 <button
                     type="button"
-                    onclick="irPara('pets')"
+                    data-tela="clubePro"
+                    onclick="irPara('clubePro')"
                 >
-                    🐾 Pets
+                    Clube Pro
                 </button>
 
                 <button
                     type="button"
+                    data-tela="recompensas"
+                    onclick="irPara('recompensas')"
+                >
+                    Conquistas
+                </button>
+
+                <button
+                    type="button"
+                    data-tela="reels"
+                    onclick="irPara('reels')"
+                >
+                    Reels
+                </button>
+
+                <button
+                    type="button"
+                    data-tela="comunidade"
+                    onclick="irPara('comunidade')"
+                >
+                    Comunidade
+                </button>
+
+                <button
+                    type="button"
+                    data-tela="videos"
                     onclick="irPara('videos')"
                 >
-                    🎥 Vídeos
+                    Videoaulas
                 </button>
 
                 <button
                     type="button"
+                    data-tela="ranking"
                     onclick="irPara('ranking')"
                 >
-                    🏆 Ranking
+                    Ranking
                 </button>
+
+                </nav>
 
                 <button
                     type="button"
                     onclick="sair()"
                     class="botao-sair"
                 >
-                    🚪 Sair
+                    Sair
                 </button>
-
-            </nav>
+            </div>
 
         </header>
 
@@ -333,22 +481,24 @@
             <section id="inicio" class="tela ativa">
 
                 <div class="hero">
+                    <video class="hero-video-fundo" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+                        <source src="./assets/videos/runner-track-slow-motion.mp4" type="video/mp4">
+                    </video>
 
                     <div class="hero-texto">
 
                         <span class="badge">
-                            ⭐ APRENDA DE UM JEITO DIFERENTE
+                            🏁 SEU PRÓXIMO DESAFIO COMEÇA AQUI
                         </span>
 
                         <h2>
-                            Matemática pode ser
-                            <strong>divertida!</strong>
+                            Prepare a mente.<br>
+                            <strong>Corra para a vitória.</strong>
                         </h2>
 
                         <p>
-                            Aprenda matemática brincando,
-                            resolva desafios e conquiste pontos
-                            enquanto se diverte.
+                            Entre na pista, resolva desafios do Ensino Fundamental
+                            e transforme cada resposta certa em velocidade e conquista.
                         </p>
 
                         <div class="hero-botoes">
@@ -358,7 +508,7 @@
                                 onclick="irPara('jogos')"
                                 class="botao-principal"
                             >
-                                🚀 Começar desafio
+                                🏁 Escolher meu circuito
                             </button>
 
                             <button
@@ -366,7 +516,7 @@
                                 onclick="irPara('videos')"
                                 class="botao-secundario"
                             >
-                                🎥 Ver videoaulas
+                                📚 Explorar videoaulas
                             </button>
 
                         </div>
@@ -377,19 +527,19 @@
                     <div class="hero-ilustracao">
 
                         <div class="circulo-ilustracao">
-                            🧮
+                            <img src="./assets/mathzone-mark.svg" alt="Marca MathZone: atleta, pista e matemática">
                         </div>
 
                         <div class="mini-conta conta-1">
-                            2 + 2 = ?
+                            3/4 de 120 = ?
                         </div>
 
                         <div class="mini-conta conta-2">
-                            5 × 3
+                            2,4 km = ? m
                         </div>
 
                         <div class="mini-conta conta-3">
-                            20 ÷ 4
+                            15% de 240
                         </div>
 
                     </div>
@@ -408,18 +558,17 @@
                             🎮
                         </div>
 
-                        <h3>Desafios</h3>
+                        <h3>Treinos de pista</h3>
 
                         <p>
-                            Teste seus conhecimentos
-                            com jogos divertidos.
+                            Três modalidades para praticar cálculo, estratégia e corrida.
                         </p>
 
                         <button
                             type="button"
                             onclick="irPara('jogos')"
                         >
-                            Jogar agora →
+                            Ver modalidades →
                         </button>
 
                     </div>
@@ -428,21 +577,20 @@
                     <div class="recurso-card amarelo">
 
                         <div class="icone-recurso">
-                            🎥
+                            🎬
                         </div>
 
-                        <h3>Videoaulas</h3>
+                        <h3>Reels da pista</h3>
 
                         <p>
-                            Aprenda matemática de um
-                            jeito simples.
+                            Vídeos rápidos de corrida com contas para resolver no caminho.
                         </p>
 
                         <button
                             type="button"
-                            onclick="irPara('videos')"
+                            onclick="irPara('reels')"
                         >
-                            Assistir →
+                            Assistir reels →
                         </button>
 
                     </div>
@@ -451,14 +599,13 @@
                     <div class="recurso-card verde">
 
                         <div class="icone-recurso">
-                            ⭐
+                            🏆
                         </div>
 
-                        <h3>Evolução</h3>
+                        <h3>Seu ritmo. Seu recorde.</h3>
 
                         <p>
-                            Resolva desafios e conquiste
-                            pontos.
+                            Ganhe pontos, acompanhe sua evolução e desbloqueie prêmios.
                         </p>
 
                         <button
@@ -472,8 +619,169 @@
 
                 </div>
 
+                <aside class="clube-pro-chamada">
+                    <div>
+                        <span>CLUBE PRO · GRATUITO</span>
+                        <h3>Mais estratégia para cada quilômetro.</h3>
+                        <p>Calcule parciais, descubra projeções e ganhe pontos resolvendo um desafio avançado de pace.</p>
+                    </div>
+                    <button type="button" onclick="irPara('clubePro')">Explorar Clube Pro <span aria-hidden="true">→</span></button>
+                </aside>
+
+                <section class="pit-stop-matematico" aria-labelledby="tituloPitStop">
+                    <div class="pit-stop-intro">
+                        <span>BOX DE ESTRATÉGIA</span>
+                        <h2 id="tituloPitStop">Seu próximo recorde começa nos números.</h2>
+                        <p>Calcule seu ritmo, descubra seu tempo de prova e complete o desafio diário da pista.</p>
+                    </div>
+
+                    <div class="pit-stop-grade">
+                        <section class="ritmo-calculadora" aria-labelledby="tituloCalculadoraRitmo">
+                            <div class="pit-stop-cartao-topo">
+                                <span class="pit-stop-icone" aria-hidden="true">↗</span>
+                                <span>FERRAMENTA DE TREINO</span>
+                            </div>
+                            <h3 id="tituloCalculadoraRitmo">Calculadora de ritmo</h3>
+                            <p>Transforme distância e tempo em métricas para sua corrida.</p>
+                            <form id="formCalculadoraRitmo" class="ritmo-form" onsubmit="calcularRitmoCorrida(event)">
+                                <div class="ritmo-distancia-campo">
+                                    <label for="distanciaRitmo">Distância <span>quilômetros</span></label>
+                                    <input id="distanciaRitmo" name="distancia" type="number" min="0.1" max="100" step="0.1" value="5" required>
+                                </div>
+                                <div class="ritmo-campos-tempo">
+                                    <div>
+                                        <label for="minutosRitmo">Tempo <span>minutos</span></label>
+                                        <input id="minutosRitmo" name="minutos" type="number" min="0" max="999" step="1" value="30" required>
+                                    </div>
+                                    <div>
+                                        <label for="segundosRitmo">Segundos</label>
+                                        <input id="segundosRitmo" name="segundos" type="number" min="0" max="59" step="1" value="0" required>
+                                    </div>
+                                </div>
+                                <button class="ritmo-calcular" type="submit">Calcular meu ritmo <span aria-hidden="true">→</span></button>
+                            </form>
+                            <div id="resultadoRitmo" class="ritmo-resultado" role="status" aria-live="polite">
+                                <div><span>Ritmo médio</span><strong id="ritmoPorKm">6:00 /km</strong></div>
+                                <div><span>Velocidade média</span><strong id="velocidadeMediaRitmo">10,0 km/h</strong></div>
+                                <div><span>Estimativa para 5 km</span><strong id="tempoEstimado5k">30:00</strong></div>
+                            </div>
+                        </section>
+
+                        <section class="desafio-diario" aria-labelledby="tituloDesafioDiario">
+                            <div class="pit-stop-cartao-topo">
+                                <span class="pit-stop-icone desafio" aria-hidden="true">∑</span>
+                                <span>DESAFIO DO DIA</span>
+                                <time id="dataDesafioDiario"></time>
+                            </div>
+                            <h3 id="tituloDesafioDiario">A conta da pista</h3>
+                            <p id="perguntaDesafioDiario" class="desafio-diario-pergunta"></p>
+                            <form id="formDesafioDiario" class="desafio-diario-form" onsubmit="responderDesafioDiario(event)">
+                                <label for="respostaDesafioDiario">Sua resposta <span id="unidadeDesafioDiario"></span></label>
+                                <div class="desafio-diario-controles">
+                                    <input id="respostaDesafioDiario" type="number" step="any" inputmode="decimal" required>
+                                    <button id="botaoResponderDesafioDiario" type="submit">Responder</button>
+                                </div>
+                            </form>
+                            <p id="feedbackDesafioDiario" class="feedback-desafio-diario" role="status" aria-live="polite"></p>
+                            <div class="desafio-recompensa-diaria"><span aria-hidden="true">✦</span> +10 pontos por acerto</div>
+                        </section>
+                    </div>
+                </section>
+
             </section>
 
+
+            <!-- ============================= -->
+            <!-- CLUBE PRO -->
+            <!-- ============================= -->
+
+            <section id="clubePro" class="tela clube-pro-tela">
+
+                <div class="clube-pro-hero">
+                    <div class="clube-pro-hero-texto">
+                        <span class="clube-pro-etiqueta"><span aria-hidden="true">✦</span> CLUBE PRO · GRATUITO</span>
+                        <h2>Transforme cada treino em <strong>matemática de corrida.</strong></h2>
+                        <p>Analise seu ritmo, compare parciais e acompanhe sua evolução com ferramentas feitas para a pista.</p>
+                        <div class="clube-pro-acoes">
+                            <a href="#calculadoraClubePro">Analisar um treino <span aria-hidden="true">↓</span></a>
+                            <span>Sem cobrança · Dados salvos neste dispositivo</span>
+                        </div>
+                    </div>
+                    <div class="clube-pro-resumo" aria-label="Resumo do seu histórico">
+                        <div><span>TREINOS REGISTRADOS</span><strong id="totalTreinosClubePro">0</strong></div>
+                        <div><span>DISTÂNCIA ACUMULADA</span><strong id="distanciaTotalClubePro">0 km</strong></div>
+                        <div><span>RITMO MÉDIO</span><strong id="ritmoMedioClubePro">—</strong></div>
+                    </div>
+                </div>
+
+                <div class="clube-pro-grade">
+                    <section id="calculadoraClubePro" class="clube-pro-cartao clube-pro-calculadora" aria-labelledby="tituloCalculadoraClubePro">
+                        <div class="clube-pro-cartao-topo">
+                            <span class="clube-pro-icone" aria-hidden="true">∑</span>
+                            <div><span>LABORATÓRIO DE RITMO</span><h3 id="tituloCalculadoraClubePro">Analise sua corrida</h3></div>
+                        </div>
+                        <p>Informe distância e tempo para calcular parciais, velocidade e projeções proporcionais.</p>
+                        <form id="formClubePro" class="clube-pro-form" onsubmit="analisarTreinoClubePro(event)">
+                            <div>
+                                <label for="distanciaClubePro">Distância <span>km</span></label>
+                                <input id="distanciaClubePro" name="distancia" type="number" min="0.1" max="100" step="0.1" value="5" required>
+                            </div>
+                            <div>
+                                <label for="minutosClubePro">Tempo <span>min</span></label>
+                                <input id="minutosClubePro" name="minutos" type="number" min="0" max="999" step="1" value="30" required>
+                            </div>
+                            <div>
+                                <label for="segundosClubePro">Segundos</label>
+                                <input id="segundosClubePro" name="segundos" type="number" min="0" max="59" step="1" value="0" required>
+                            </div>
+                            <button type="submit">Calcular análise <span aria-hidden="true">→</span></button>
+                        </form>
+                        <p id="feedbackCalculadoraClubePro" class="clube-pro-feedback" role="status" aria-live="polite"></p>
+                        <div id="resultadosClubePro" class="clube-pro-resultados" aria-live="polite">
+                            <div><span>RITMO MÉDIO</span><strong id="ritmoClubePro">6:00 /km</strong></div>
+                            <div><span>VELOCIDADE MÉDIA</span><strong id="velocidadeClubePro">10,0 km/h</strong></div>
+                            <div><span>PARCIAL DE 400 M</span><strong id="parcialClubePro">2:24</strong></div>
+                            <div><span>PROJEÇÃO 10 KM</span><strong id="projecaoClubePro">1:00:00</strong></div>
+                        </div>
+                        <button id="salvarTreinoClubePro" class="clube-pro-salvar" type="button" onclick="salvarTreinoClubePro()" disabled>Salvar no meu histórico</button>
+                    </section>
+
+                    <section class="clube-pro-cartao clube-pro-desafio" aria-labelledby="tituloDesafioClubePro">
+                        <div class="clube-pro-cartao-topo">
+                            <span class="clube-pro-icone clube-pro-icone-desafio" aria-hidden="true">⚡</span>
+                            <div><span>ESTRATÉGIA EM ETAPAS</span><h3 id="tituloDesafioClubePro">Desafio de pace</h3></div>
+                        </div>
+                        <p class="clube-pro-pergunta">Em uma prova de 5 km, uma atleta corre os primeiros 2 km a 6 min/km e os últimos 3 km a 5 min/km. Qual é o ritmo médio da prova?</p>
+                        <form id="formDesafioClubePro" class="clube-pro-desafio-form" onsubmit="responderDesafioClubePro(event)">
+                            <label for="respostaDesafioClubePro">Ritmo médio <span>min/km</span></label>
+                            <div>
+                                <input id="respostaDesafioClubePro" type="number" min="0" max="60" step="0.01" inputmode="decimal" placeholder="Ex.: 5,4" required>
+                                <button id="botaoDesafioClubePro" type="submit">Conferir</button>
+                            </div>
+                        </form>
+                        <p id="feedbackDesafioClubePro" class="clube-pro-feedback" role="status" aria-live="polite"></p>
+                        <p class="clube-pro-recompensa">✦ +10 pontos por acerto, uma vez por dia</p>
+                        <details class="clube-pro-formula">
+                            <summary>Ver resolução detalhada</summary>
+                            <p>(2 × 6) + (3 × 5) = 27 min</p>
+                            <p>27 ÷ 5 km = <strong>5,4 min/km</strong></p>
+                            <small>Somamos o tempo de cada trecho e dividimos pela distância total.</small>
+                        </details>
+                    </section>
+                </div>
+
+                <section class="clube-pro-historico" aria-labelledby="tituloHistoricoClubePro">
+                    <div class="clube-pro-historico-topo">
+                        <div><span>SEU PROGRESSO</span><h3 id="tituloHistoricoClubePro">Histórico de treinos</h3><p>As análises ficam salvas neste navegador e neste dispositivo.</p></div>
+                        <button id="limparHistoricoClubePro" type="button" onclick="limparHistoricoClubePro()" hidden>Limpar histórico</button>
+                    </div>
+                    <p id="mensagemHistoricoClubePro" class="clube-pro-historico-vazio">Analise e salve seu primeiro treino para começar a acompanhar os números.</p>
+                    <ol id="listaHistoricoClubePro" class="clube-pro-historico-lista"></ol>
+                </section>
+
+                <p class="clube-pro-aviso">As projeções são estimativas matemáticas baseadas no ritmo informado; o desempenho real pode variar. O Clube Pro é gratuito e não processa pagamentos.</p>
+
+            </section>
 
 
             <!-- ============================= -->
@@ -484,15 +792,14 @@
 
                 <div class="titulo-secao">
 
-                    <span>🎮</span>
+                    <span>🏁</span>
 
                     <h2>
-                        Hora do desafio!
+                        Escolha sua modalidade
                     </h2>
 
                     <p>
-                        Escolha um jogo e coloque seus conhecimentos
-                        de matemática à prova.
+                        Três formas de treinar a matemática do 5º ao 9º ano. Qual vai ser seu próximo recorde?
                     </p>
 
                 </div>
@@ -501,61 +808,63 @@
                 <div class="jogos-grid">
 
 
-                    <!-- QUIZ -->
-
-                    <div class="jogo-card jogo-rosa">
+                    <div class="jogo-card jogo-estrategia">
 
                         <span class="numero-desafio">
-                            DESAFIO 01
+                            01 · ESTRATÉGIA
                         </span>
 
-                        <div class="icone-jogo">
-                            🧮
+                        <div class="icone-jogo" aria-hidden="true">
+                            📐
                         </div>
 
                         <h3>
-                            Quiz MathZone
+                            Desafio de Estratégia
                         </h3>
 
                         <p>
-                            Responda perguntas e conquiste pontos!
+                            Resolva problemas de várias etapas com frações, porcentagem,
+                            proporções, medidas e geometria.
                         </p>
+
+                        <span class="jogo-nivel">5º–9º ANO <span>·</span> 8 ETAPAS</span>
 
                         <button
                             type="button"
-                            onclick="abrirQuiz()"
+                            onclick="abrirEstrategia()"
                         >
-                            Jogar agora 🚀
+                            Entrar no circuito →
                         </button>
 
                     </div>
 
 
-                    <!-- DETETIVE -->
-
-                    <div class="jogo-card jogo-amarelo">
+                    <div class="jogo-card jogo-sprint-mental">
 
                         <span class="numero-desafio">
-                            DESAFIO 02
+                            02 · VELOCIDADE
                         </span>
 
-                        <div class="icone-jogo">
-                            🔎
+                        <div class="icone-jogo" aria-hidden="true">
+                            ⚡
                         </div>
 
                         <h3>
-                            Detetive Matemático
+                            Sprint Mental
                         </h3>
 
                         <p>
-                            Resolva os mistérios usando matemática.
+                            75 segundos de cálculo: expressões, equações,
+                            decimais, razões e porcentagens.
                         </p>
+
+                        <span class="jogo-nivel">5º–9º ANO <span>·</span> CONTRA O RELÓGIO</span>
 
                         <button
                             type="button"
-                            onclick="abrirDetetive()"
+                            onclick="abrirSprintMental()"
                         >
-                            Investigar 🔎
+                            Largar no sprint →
                         </button>
 
                     </div>
@@ -565,13 +874,15 @@
 
                     <div class="jogo-card jogo-corrida">
 
-                        <span class="numero-desafio">DESAFIO 03</span>
+                        <span class="numero-desafio">03 · HABILIDADE</span>
 
                         <div class="icone-jogo" aria-hidden="true">🏃</div>
 
                         <h3>Corrida de Rua</h3>
 
-                        <p>Corra 400 m, desvie dos cones e resolva contas nos portais matemáticos.</p>
+                        <p>Mantenha a faixa, desvie dos obstáculos e resolva contas nos portais matemáticos.</p>
+
+                        <span class="jogo-nivel">400 M <span>·</span> CORRIDA + CÁLCULO</span>
 
                         <button type="button" onclick="abrirCorrida()">
                             Alinhar na largada →
@@ -587,46 +898,46 @@
 
 
             <!-- ============================= -->
-            <!-- PETS -->
+            <!-- RECOMPENSAS DA PISTA -->
             <!-- ============================= -->
 
-            <section id="pets" class="tela">
+            <section id="recompensas" class="tela">
 
                 <div class="titulo-secao">
-                    <span>🐾</span>
-                    <h2>Seu cantinho pet</h2>
-                    <p>Responda corretamente, junte pontos e adote novos companheiros.</p>
+                    <span>🏅</span>
+                    <h2>Conquistas da pista</h2>
+                    <p>Troque seus pontos de treino por medalhas, troféus e itens para a sua próxima corrida.</p>
                 </div>
 
-                <div class="carteira-pets">
+                <div class="carteira-recompensas">
                     <div>
-                        <span>Seus pontos</span>
-                        <strong id="saldoPets">0 pts</strong>
+                        <span>Pontos de treino</span>
+                        <strong id="saldoPista">0 pts</strong>
                     </div>
                     <div>
-                        <span>Pets na coleção</span>
-                        <strong id="totalPets">0 pets</strong>
+                        <span>Recompensas desbloqueadas</span>
+                        <strong id="totalRecompensas">0</strong>
                     </div>
-                    <p id="mensagemPets" role="status" aria-live="polite"></p>
+                    <p id="mensagemRecompensas" role="status" aria-live="polite"></p>
                 </div>
 
-                <div id="petAtivo" class="pet-destaque"></div>
+                <div id="recompensaDestaque" class="recompensa-destaque"></div>
 
                 <div class="titulo-loja">
                     <div>
-                        <h3>Loja de pets</h3>
-                        <p>Escolha um companheiro para adotar.</p>
+                        <h3>Vitrine da corrida</h3>
+                        <p>Resgate itens de energia e hidratação ou complete sua coleção de medalhas.</p>
                     </div>
                 </div>
-                <div id="lojaPets" class="loja-pets"></div>
+                <div id="lojaRecompensas" class="loja-recompensas"></div>
 
                 <div class="titulo-loja titulo-colecao">
                     <div>
                         <h3>Minha coleção</h3>
-                        <p>Equipe qualquer pet que você já adotou.</p>
+                        <p>Escolha a conquista que ficará em destaque no seu perfil.</p>
                     </div>
                 </div>
-                <div id="colecaoPets" class="colecao-pets"></div>
+                <div id="colecaoRecompensas" class="colecao-recompensas"></div>
 
             </section>
 
@@ -651,6 +962,196 @@
 
             </section>
 
+            <section id="reels" class="tela reels-tela">
+                <div class="titulo-secao reels-intro">
+                    <span aria-hidden="true">🎬</span>
+                    <h2>Reels da pista</h2>
+                    <p>Vídeos rápidos de corrida com desafios matemáticos. Role para assistir ao próximo e toque para conferir a solução.</p>
+                </div>
+
+                <div class="reels-feed" id="reelsFeed" aria-label="Feed de reels de corrida e matemática">
+                    <article class="reel-slide">
+                        <video class="reel-video" autoplay muted loop playsinline preload="metadata" aria-label="Atleta correndo em uma pista azul">
+                            <source src="./assets/videos/runner-track-sprint.mp4" type="video/mp4">
+                        </video>
+                        <div class="reel-sombra"></div>
+                        <p class="reel-legenda-visual">Descrição do vídeo: atleta corre na pista. Desafio escrito: três voltas de 400 metros.</p>
+                        <span class="reel-etiqueta">🏃 CORRIDA + MATEMÁTICA</span>
+                        <div class="reel-conteudo">
+                            <span class="reel-tema">DESAFIO 01 · DISTÂNCIA</span>
+                            <h3>Três voltas de 400 m. Quantos metros você correu?</h3>
+                            <p id="respostaReel1" class="reel-resposta" hidden>3 × 400 = <strong>1.200 m</strong>, ou 1,2 km.</p>
+                            <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel1" onclick="alternarRespostaReel(this)">Ver solução</button>
+                        </div>
+                        <div class="reel-acoes" aria-label="Ações do reel">
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="128" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>128</small></button>
+                            <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
+                            <button class="reel-acao" type="button" aria-label="Próximo reel" onclick="moverReel(this, 1)"><span aria-hidden="true">⌄</span><small>Próximo</small></button>
+                        </div>
+                        <a class="reel-fonte" href="https://mixkit.co/free-stock-video/woman-running-fast-on-a-running-track-32792/" target="_blank" rel="noopener noreferrer">Vídeo: Mixkit</a>
+                    </article>
+
+                    <article class="reel-slide">
+                        <video class="reel-video" autoplay muted loop playsinline preload="metadata" aria-label="Corredor em movimento visto próximo ao chão">
+                            <source src="./assets/videos/runner-track-ground.mp4" type="video/mp4">
+                        </video>
+                        <div class="reel-sombra"></div>
+                        <p class="reel-legenda-visual">Descrição do vídeo: corredor passa pela pista, em cena sem fala. Desafio escrito sobre ritmo médio.</p>
+                        <span class="reel-etiqueta">⚡ SPRINT MENTAL</span>
+                        <div class="reel-conteudo">
+                            <span class="reel-tema">DESAFIO 02 · RITMO</span>
+                            <h3>2,4 km em 12 minutos. Qual a média em metros por minuto?</h3>
+                            <p id="respostaReel2" class="reel-resposta" hidden>2,4 km = 2.400 m. Então, 2.400 ÷ 12 = <strong>200 m/min</strong>.</p>
+                            <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel2" onclick="alternarRespostaReel(this)">Ver solução</button>
+                        </div>
+                        <div class="reel-acoes" aria-label="Ações do reel">
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="96" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>96</small></button>
+                            <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
+                            <button class="reel-acao" type="button" aria-label="Próximo reel" onclick="moverReel(this, 1)"><span aria-hidden="true">⌄</span><small>Próximo</small></button>
+                        </div>
+                        <a class="reel-fonte" href="https://mixkit.co/free-stock-video/man-runs-past-ground-level-shot-32809/" target="_blank" rel="noopener noreferrer">Vídeo: Mixkit</a>
+                    </article>
+
+                    <article class="reel-slide">
+                        <video class="reel-video" autoplay muted loop playsinline preload="metadata" aria-label="Close de uma corrida em pista ao ar livre">
+                            <source src="./assets/videos/runner-track-slow-motion.mp4" type="video/mp4">
+                        </video>
+                        <div class="reel-sombra"></div>
+                        <p class="reel-legenda-visual">Descrição do vídeo: corrida em pista ao ar livre, sem fala. Desafio escrito de porcentagem.</p>
+                        <span class="reel-etiqueta">📐 DESAFIO DA PISTA</span>
+                        <div class="reel-conteudo">
+                            <span class="reel-tema">DESAFIO 03 · PORCENTAGEM</span>
+                            <h3>Você já correu 800 m de uma prova de 2 km. Quantos por cento completou?</h3>
+                            <p id="respostaReel3" class="reel-resposta" hidden>800 ÷ 2.000 = 0,4. Você completou <strong>40%</strong> da prova.</p>
+                            <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel3" onclick="alternarRespostaReel(this)">Ver solução</button>
+                        </div>
+                        <div class="reel-acoes" aria-label="Ações do reel">
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="74" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>74</small></button>
+                            <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
+                            <button class="reel-acao" type="button" aria-label="Reel anterior" onclick="moverReel(this, -1)"><span aria-hidden="true">⌃</span><small>Anterior</small></button>
+                        </div>
+                        <a class="reel-fonte" href="https://mixkit.co/free-stock-video/runner-on-a-track-in-slow-motion-609/" target="_blank" rel="noopener noreferrer">Vídeo: Mixkit</a>
+                    </article>
+                </div>
+            </section>
+
+            <section id="comunidade" class="tela comunidade-tela">
+                <div class="comunidade-intro">
+                    <span>PISTA SOCIAL · MATHZONE</span>
+                    <h2>Corrida que conecta.</h2>
+                    <p>Compartilhe seus treinos, desafie a comunidade e celebre cada conquista.</p>
+                </div>
+
+                <section class="instagram-perfil" aria-label="Perfil MathZone Run Club">
+                    <div class="instagram-capa">
+                        <span>MOVE · THINK · REPEAT</span>
+                        <span aria-hidden="true">🏁</span>
+                    </div>
+                    <div class="instagram-perfil-info">
+                        <div class="instagram-avatar">
+                            <img src="./assets/mathzone-mark.svg" alt="Símbolo MathZone">
+                        </div>
+                        <div class="instagram-identidade">
+                            <div class="instagram-nome">
+                                <h3>MathZone Run Club</h3>
+                                <span>@mathzone.run</span>
+                                <span class="instagram-selo-verificado" aria-label="Perfil oficial da demonstração">✓</span>
+                            </div>
+                            <p>Matemática na mente. Corrida no coração. Desafios para aprender e evoluir juntos.</p>
+                            <span class="instagram-local">Comunidade MathZone · corrida, educação e desafios</span>
+                        </div>
+                        <button id="botaoSeguir" class="instagram-seguir" type="button" aria-pressed="false" onclick="alternarSeguirComunidade()">Seguir</button>
+                    </div>
+                    <div class="instagram-estatisticas">
+                        <div><strong id="totalPublicacoes">3</strong><span>publicações</span></div>
+                        <div><strong id="totalSeguidores">12,8 mil</strong><span>seguidores</span></div>
+                        <div><strong>Corrida + educação</strong><span>uma comunidade em movimento</span></div>
+                    </div>
+                    <p class="instagram-aviso">Perfil social de demonstração. O número de seguidores é ilustrativo e não representa uma conta real do Instagram.</p>
+                    <p id="mensagemComunidade" class="mensagem-comunidade" role="status" aria-live="polite"></p>
+                </section>
+
+                <div class="instagram-destaques" aria-label="Atalhos da comunidade">
+                    <button type="button" onclick="irPara('reels')"><span class="destaque-icone reels">▶</span><small>Reels</small></button>
+                    <button type="button" onclick="irPara('jogos')"><span class="destaque-icone calculos">∑</span><small>Desafios</small></button>
+                    <button type="button" onclick="irPara('recompensas')"><span class="destaque-icone medalhas">★</span><small>Conquistas</small></button>
+                    <button type="button" onclick="irPara('ranking')"><span class="destaque-icone ranking">↗</span><small>Ranking</small></button>
+                </div>
+
+                <section class="instagram-stories" aria-label="Destaques MathZone">
+                    <div class="instagram-stories-topo">
+                        <div><span>INSPIRAÇÃO RÁPIDA</span><h3>Destaques da pista</h3></div>
+                        <span>ESCOLHA UMA TRILHA</span>
+                    </div>
+                    <div class="instagram-stories-lista">
+                        <button type="button" onclick="irPara('reels')">
+                            <span class="story-anel story-reels"><span>▶</span></span>
+                            <small>Reels</small>
+                        </button>
+                        <button type="button" onclick="irPara('jogos')">
+                            <span class="story-anel story-desafios"><span>∑</span></span>
+                            <small>Desafios</small>
+                        </button>
+                        <button type="button" onclick="irPara('recompensas')">
+                            <span class="story-anel story-conquistas"><span>★</span></span>
+                            <small>Medalhas</small>
+                        </button>
+                        <button type="button" onclick="irPara('videos')">
+                            <span class="story-anel story-aprender"><span>π</span></span>
+                            <small>Aprender</small>
+                        </button>
+                        <button type="button" onclick="irPara('ranking')">
+                            <span class="story-anel story-ranking"><span>↗</span></span>
+                            <small>Ranking</small>
+                        </button>
+                    </div>
+                </section>
+
+                <div class="instagram-conteudo">
+                    <aside class="instagram-publicar">
+                        <span class="instagram-selo">SUA VEZ NA PISTA</span>
+                        <h3>Compartilhe uma ideia</h3>
+                        <p>Conte como foi seu treino ou invente um desafio matemático para a turma.</p>
+                        <form id="formPublicacaoComunidade" onsubmit="publicarNaComunidade(event)">
+                            <label for="categoriaPublicacao">Categoria</label>
+                            <select id="categoriaPublicacao">
+                                <option value="TREINO">Treino</option>
+                                <option value="DESAFIO MATEMÁTICO">Desafio matemático</option>
+                                <option value="CONQUISTA">Conquista</option>
+                                <option value="DICA DE CORRIDA">Dica de corrida</option>
+                            </select>
+                            <label for="textoPublicacao">Sua publicação</label>
+                            <textarea id="textoPublicacao" maxlength="280" placeholder="Ex.: Completei 3 voltas de 400 m. Foram 1.200 m!" required></textarea>
+                            <div class="instagram-form-rodape">
+                                <span id="contadorPublicacao">0 / 280</span>
+                                <button type="submit">Publicar <span aria-hidden="true">↗</span></button>
+                            </div>
+                        </form>
+                    </aside>
+
+                    <section class="instagram-feed" aria-labelledby="tituloFeedComunidade">
+                        <div class="instagram-feed-topo">
+                            <div>
+                                <span>DO NOSSO CLUBE</span>
+                                <h3 id="tituloFeedComunidade">Publicações</h3>
+                            </div>
+                            <label class="instagram-ordenacao" for="ordenarPublicacoes">
+                                <span>Ordenar</span>
+                                <select id="ordenarPublicacoes" onchange="ordenarFeedComunidade(this.value)">
+                                    <option value="recentes">Recentes</option>
+                                    <option value="populares">Populares</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="instagram-abas" role="tablist" aria-label="Filtros das publicações">
+                            <button type="button" role="tab" aria-selected="true" data-filtro-comunidade="todas" onclick="filtrarFeedComunidade('todas')"><span>▦</span> Todas</button>
+                            <button type="button" role="tab" aria-selected="false" data-filtro-comunidade="desafios" onclick="filtrarFeedComunidade('desafios')"><span>∑</span> Desafios</button>
+                            <button type="button" role="tab" aria-selected="false" data-filtro-comunidade="salvas" onclick="filtrarFeedComunidade('salvas')"><span>▱</span> Salvas</button>
+                        </div>
+                        <div id="feedComunidade" class="instagram-postagens" aria-live="polite"></div>
+                    </section>
+                </div>
+            </section>
 
             <!-- VIDEOS -->
             <!-- ============================= -->
@@ -661,12 +1162,10 @@
 
                     <span>🎥</span>
 
-                    <h2>
-                        Aprenda com videoaulas
-                    </h2>
+                    <h2>Box de treino matemático</h2>
 
                     <p>
-                        Escolha um assunto e aprenda de forma simples.
+                        Aqueça a mente com conteúdos do Ensino Fundamental antes da próxima prova.
                     </p>
 
                 </div>
@@ -680,16 +1179,16 @@
                         <div>➕</div>
 
                         <h3>
-                            Adição
+                            Frações e decimais
                         </h3>
 
                         <p>
-                            Aprenda a somar.
+                            Compare frações e calcule com números decimais.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('adição matemática ensino fundamental')"
+                            onclick="assistirVideo('frações e números decimais ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -702,16 +1201,16 @@
                         <div>➖</div>
 
                         <h3>
-                            Subtração
+                            Porcentagem
                         </h3>
 
                         <p>
-                            Aprenda a subtrair.
+                            Descubra descontos, aumentos e partes de uma quantidade.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('subtração matemática ensino fundamental')"
+                            onclick="assistirVideo('porcentagem matemática ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -724,16 +1223,16 @@
                         <div>✖️</div>
 
                         <h3>
-                            Multiplicação
+                            Proporção e razão
                         </h3>
 
                         <p>
-                            Aprenda a multiplicar.
+                            Compare grandezas e resolva situações proporcionais.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('multiplicação matemática ensino fundamental')"
+                            onclick="assistirVideo('razão proporção regra de três ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -746,16 +1245,16 @@
                         <div>➗</div>
 
                         <h3>
-                            Divisão
+                            Medidas e conversões
                         </h3>
 
                         <p>
-                            Aprenda a dividir.
+                            Converta metros, quilômetros, tempo e velocidade.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('divisão matemática ensino fundamental')"
+                            onclick="assistirVideo('conversão de medidas distância tempo velocidade ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -768,16 +1267,16 @@
                         <div>🍕</div>
 
                         <h3>
-                            Frações
+                            Geometria da pista
                         </h3>
 
                         <p>
-                            Entenda as frações.
+                            Calcule perímetro, área e formas geométricas.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('frações matemática ensino fundamental')"
+                            onclick="assistirVideo('área perímetro geometria ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -790,16 +1289,16 @@
                         <div>💯</div>
 
                         <h3>
-                            Porcentagem
+                            Expressões e equações
                         </h3>
 
                         <p>
-                            Aprenda porcentagem.
+                            Use operações na ordem correta e descubra valores desconhecidos.
                         </p>
 
                         <button
                             type="button"
-                            onclick="assistirVideo('porcentagem matemática ensino fundamental')"
+                            onclick="assistirVideo('expressões numéricas equações ensino fundamental')"
                         >
                             Assistir ▶
                         </button>
@@ -819,7 +1318,7 @@
         <footer>
 
             <p>
-                🚀 MathZone — Aprender matemática pode ser divertido!
+                🏁 MathZone — Mais uma volta, mais uma conquista.
             </p>
 
         </footer>
@@ -845,81 +1344,57 @@
             </button>
 
 
-            <!-- QUIZ -->
-
-            <div id="quiz" class="jogo-area">
-
-                <span class="tag-jogo">
-                    🧮 QUIZ MATHZONE
-                </span>
-
-                <h2>
-                    Responda corretamente!
-                </h2>
-
-                <p id="pontos">
-                    Pontos: 0
-                </p>
-
-                <div class="pergunta">
-
-                    <p id="perguntaQuiz">
-                        Pergunta
-                    </p>
-
+            <div id="estrategia" class="jogo-area desafio-area">
+                <div class="desafio-cabecalho">
+                    <div>
+                        <span class="tag-jogo">📐 CIRCUITO DE ESTRATÉGIA · 5º–9º ANO</span>
+                        <h2>Desafio de Estratégia</h2>
+                        <p>Leia com atenção. Cada etapa é um problema de várias passadas.</p>
+                    </div>
+                    <div class="desafio-placar"><span>PONTOS</span><strong id="pontosEstrategia">0</strong></div>
                 </div>
-
-                <div
-                    id="respostasQuiz"
-                    class="respostas"
-                ></div>
-
-                <p id="resultadoQuiz"></p>
-
+                <div class="desafio-progresso">
+                    <div><span id="etapaEstrategia">ETAPA 1 DE 8</span><span id="sequenciaEstrategia">SEQUÊNCIA 0</span></div>
+                    <div class="desafio-trilho"><span id="barraEstrategia"></span></div>
+                </div>
+                <div class="desafio-pergunta">
+                    <span id="temaEstrategia" class="desafio-tema">MEDIDAS</span>
+                    <p id="perguntaEstrategia" aria-live="polite"></p>
+                </div>
+                <div id="respostasEstrategia" class="desafio-respostas" role="group" aria-label="Escolha uma resposta"></div>
+                <p id="feedbackEstrategia" class="desafio-feedback" role="status" aria-live="polite"></p>
+                <div id="fimEstrategia" class="desafio-fim" hidden></div>
             </div>
 
-
-
-            <!-- DETETIVE -->
-
-            <div id="detetive" class="jogo-area">
-
-                <span class="tag-jogo">
-                    🔎 DETETIVE MATEMÁTICO
-                </span>
-
-                <h2>
-                    Descubra a resposta!
-                </h2>
-
-                <p id="pontosDetetive">
-                    Pontos: 0
-                </p>
-
-                <div class="pergunta">
-
-                    <p id="perguntaDetetive">
-                        Pergunta
-                    </p>
-
+            <div id="sprintMental" class="jogo-area desafio-area">
+                <div class="desafio-cabecalho">
+                    <div>
+                        <span class="tag-jogo tag-sprint">⚡ SPRINT MENTAL · 5º–9º ANO</span>
+                        <h2>Sprint Mental</h2>
+                        <p>Resolva o máximo que conseguir antes da bandeirada.</p>
+                    </div>
+                    <div class="desafio-placar"><span>PONTOS</span><strong id="pontosSprint">0</strong></div>
                 </div>
-
-                <input
-                    type="number"
-                    id="respostaDetetive"
-                    placeholder="Digite sua resposta"
-                >
-
-                <button
-                    type="button"
-                    onclick="responderDetetive()"
-                    class="botao-jogo"
-                >
-                    🔎 Investigar
-                </button>
-
-                <p id="resultadoDetetive"></p>
-
+                <div class="sprint-hud">
+                    <div class="sprint-tempo"><span>TEMPO</span><strong id="tempoSprint">75</strong><small>seg</small></div>
+                    <div class="desafio-progresso">
+                        <div><span id="etapaSprint">LARGADA · 0 ACERTOS</span><span id="sequenciaSprint">SEQUÊNCIA 0</span></div>
+                        <div class="desafio-trilho"><span id="barraSprint"></span></div>
+                    </div>
+                </div>
+                <div class="desafio-pergunta sprint-pergunta">
+                    <span id="temaSprint" class="desafio-tema">CÁLCULO</span>
+                    <p id="perguntaSprint" aria-live="polite"></p>
+                </div>
+                <form id="formSprint" class="sprint-resposta">
+                    <label for="respostaSprint">Sua resposta</label>
+                    <div>
+                        <input id="respostaSprint" name="resposta" type="text" inputmode="decimal" autocomplete="off" placeholder="Digite o resultado" required>
+                        <button type="submit" class="botao-jogo">Confirmar →</button>
+                    </div>
+                </form>
+                <p id="feedbackSprint" class="desafio-feedback" role="status" aria-live="polite"></p>
+                <div id="fimSprint" class="desafio-fim" hidden></div>
             </div>
 
 
