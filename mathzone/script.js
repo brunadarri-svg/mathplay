@@ -4,6 +4,7 @@
 
 const chaveContasLocaisMathZone = "mathzoneContasLocaisV1";
 const iteracoesHashSenhaMathZone = 120000;
+const chaveAtividadesTurma = "menteTurboAtividadesTurmaV1";
 
 async function derivarHashSenhaMathZone(senha, sal) {
     if (!window.crypto || !window.crypto.subtle) {
@@ -74,7 +75,7 @@ function mostrarFormulariosConta(cadastro) {
     document.getElementById("alternarContaLogin").hidden = cadastro;
     document.getElementById("alternarContaCadastro").hidden = !cadastro;
     document.querySelector(".login-card h2").textContent =
-        cadastro ? "Crie sua conta MathZone" : "Entre na sua pista";
+        cadastro ? "Crie sua conta Mente Turbo" : "Entre na sua pista";
     document.querySelector(".subtitulo-login").textContent = cadastro
         ? "Monte seu perfil e acompanhe sua evolução na pista."
         : "Acesse seus treinos, recordes e conquistas.";
@@ -129,7 +130,8 @@ async function cadastrarConta(event) {
             nome: nome,
             email: email,
             sal: sal,
-            hashSenha: hashSenha
+            hashSenha: hashSenha,
+            tipoConta: document.getElementById("tipoContaCadastro").value
         });
         localStorage.setItem(chaveContasLocaisMathZone, JSON.stringify(contas));
 
@@ -184,10 +186,17 @@ async function entrarMathZone(event) {
 
         localStorage.setItem("mathzoneEmail", conta.email);
         localStorage.setItem("mathzoneNome", conta.nome);
+        const tipoConta = conta.tipoConta === "professor" ? "professor" : "aluno";
+        localStorage.setItem("mathzoneTipoConta", tipoConta);
         document.getElementById("telaLogin").style.display = "none";
         document.getElementById("sitePrincipal").classList.add("visivel");
-        sincronizarVideosReels("inicio");
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        document.querySelector(".link-pular-conteudo").href = "#conteudoPrincipal";
+        configurarAreaPorPerfil(tipoConta);
+        irPara(tipoConta === "professor" ? "professor" : "inicio");
+        window.scrollTo({
+            top: 0,
+            behavior: movimentoReduzidoAtivo() ? "auto" : "smooth"
+        });
     } catch (erro) {
         console.error("Não foi possível entrar na conta MathZone.", erro);
         mostrarMensagemConta(
@@ -211,6 +220,7 @@ function alternarVisibilidadeSenha(idCampo, botao) {
     const exibir = campo.type === "password";
     campo.type = exibir ? "text" : "password";
     botao.textContent = exibir ? "Ocultar senha" : "Mostrar senha";
+    botao.setAttribute("aria-pressed", String(exibir));
 }
 
 
@@ -233,8 +243,10 @@ function sair() {
 
     localStorage.removeItem("mathzoneEmail");
     localStorage.removeItem("mathzoneNome");
+    localStorage.removeItem("mathzoneTipoConta");
 
     document.getElementById("sitePrincipal").classList.remove("visivel");
+    document.querySelector(".link-pular-conteudo").href = "#emailLogin";
 
     document.getElementById("telaLogin").style.display = "flex";
 
@@ -261,41 +273,112 @@ function alternarPainelAcessibilidade(abrir) {
     }
 }
 
-function definirModoVisualSurdo(ativado) {
+function movimentoReduzidoAtivo() {
+    return document.body.classList.contains("movimento-reduzido") ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function atualizarPreferenciaAcessibilidade(idControle, classe, chave, ativado, descricao) {
     const aviso = document.getElementById("avisoModoVisual");
-    document.body.classList.toggle("apoio-visual-surdo", ativado);
-    document.getElementById("modoVisualSurdo").checked = ativado;
-    aviso.hidden = !ativado;
-    aviso.textContent = ativado
-        ? "Modo visual ativado. Instruções e avisos importantes são apresentados por escrito."
-        : "Modo visual desativado.";
+    document.body.classList.toggle(classe, ativado);
+    document.getElementById(idControle).checked = ativado;
+    aviso.classList.remove("aviso-acessibilidade-erro");
+    aviso.hidden = false;
+    aviso.textContent = descricao + (ativado ? " ativado." : " desativado.");
+
+    if (classe === "movimento-reduzido") {
+        const telaAtiva = document.querySelector(".tela.ativa");
+        sincronizarVideosReels(telaAtiva ? telaAtiva.id : null);
+    }
 
     try {
-        localStorage.setItem("mathzoneModoVisualSurdo", ativado ? "ativado" : "desativado");
+        localStorage.setItem(chave, ativado ? "ativado" : "desativado");
     } catch (erro) {
         console.error("Não foi possível salvar a preferência de acessibilidade.", erro);
-        aviso.hidden = false;
+        aviso.classList.add("aviso-acessibilidade-erro");
         aviso.textContent += " A preferência não pôde ser salva neste navegador.";
     }
 }
 
-function iniciarAcessibilidade() {
-    let ativado = false;
-    try {
-        ativado = localStorage.getItem("mathzoneModoVisualSurdo") === "ativado";
-    } catch (erro) {
-        console.error("Não foi possível carregar a preferência de acessibilidade.", erro);
-        const aviso = document.getElementById("avisoModoVisual");
-        aviso.hidden = false;
-        aviso.textContent = "Não foi possível carregar sua preferência de acessibilidade.";
-    }
+function definirModoVisualSurdo(ativado) {
+    atualizarPreferenciaAcessibilidade(
+        "modoVisualSurdo",
+        "apoio-visual-surdo",
+        "mathzoneModoVisualSurdo",
+        ativado,
+        "Modo de apoio visual"
+    );
+}
 
-    document.body.classList.toggle("apoio-visual-surdo", ativado);
-    document.getElementById("modoVisualSurdo").checked = ativado;
-    document.getElementById("avisoModoVisual").hidden = !ativado;
-    if (ativado) {
+function definirAltoContraste(ativado) {
+    atualizarPreferenciaAcessibilidade(
+        "contrasteAlto",
+        "contraste-alto",
+        "mathzoneContrasteAlto",
+        ativado,
+        "Modo de alto contraste"
+    );
+}
+
+function definirTextoAmpliado(ativado) {
+    atualizarPreferenciaAcessibilidade(
+        "textoAmpliado",
+        "texto-ampliado",
+        "mathzoneTextoAmpliado",
+        ativado,
+        "Modo de texto ampliado"
+    );
+}
+
+function definirMovimentoReduzido(ativado) {
+    atualizarPreferenciaAcessibilidade(
+        "movimentoReduzido",
+        "movimento-reduzido",
+        "mathzoneMovimentoReduzido",
+        ativado,
+        "Modo de movimento reduzido"
+    );
+}
+
+function definirPreferenciasIniciaisAcessibilidade() {
+    const preferencias = [
+        ["modoVisualSurdo", "apoio-visual-surdo", "mathzoneModoVisualSurdo"],
+        ["contrasteAlto", "contraste-alto", "mathzoneContrasteAlto"],
+        ["textoAmpliado", "texto-ampliado", "mathzoneTextoAmpliado"],
+        ["movimentoReduzido", "movimento-reduzido", "mathzoneMovimentoReduzido"]
+    ];
+    let modoVisualAtivado = false;
+
+    preferencias.forEach(function(preferencia) {
+        const ativado = localStorage.getItem(preferencia[2]) === "ativado";
+        document.body.classList.toggle(preferencia[1], ativado);
+        document.getElementById(preferencia[0]).checked = ativado;
+        if (preferencia[0] === "modoVisualSurdo") {
+            modoVisualAtivado = ativado;
+        }
+        if (preferencia[0] === "movimentoReduzido" && ativado) {
+            document.querySelectorAll(".hero-video-fundo, .reel-video").forEach(function(video) {
+                video.pause();
+            });
+        }
+    });
+
+    document.getElementById("avisoModoVisual").hidden = !modoVisualAtivado;
+    if (modoVisualAtivado) {
         document.getElementById("avisoModoVisual").textContent =
-            "Modo visual ativado. Instruções e avisos importantes são apresentados por escrito.";
+            "Mais informações visuais ativadas. Instruções e avisos importantes são apresentados por escrito.";
+    }
+}
+
+function iniciarAcessibilidade() {
+    const aviso = document.getElementById("avisoModoVisual");
+    try {
+        definirPreferenciasIniciaisAcessibilidade();
+    } catch (erro) {
+        console.error("Não foi possível carregar as preferências de acessibilidade.", erro);
+        aviso.hidden = false;
+        aviso.classList.add("aviso-acessibilidade-erro");
+        aviso.textContent = "Não foi possível carregar sua preferência de acessibilidade.";
     }
 
     document.addEventListener("keydown", function(event) {
@@ -303,6 +386,17 @@ function iniciarAcessibilidade() {
             alternarPainelAcessibilidade(false);
         }
     });
+
+    const preferenciaMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const atualizarVideos = function() {
+        const telaAtiva = document.querySelector(".tela.ativa");
+        sincronizarVideosReels(telaAtiva ? telaAtiva.id : null);
+    };
+    if (preferenciaMovimento.addEventListener) {
+        preferenciaMovimento.addEventListener("change", atualizarVideos);
+    } else {
+        preferenciaMovimento.addListener(atualizarVideos);
+    }
 }
 
 /* =========================================
@@ -310,6 +404,12 @@ function iniciarAcessibilidade() {
 ========================================= */
 
 function irPara(tela) {
+    const tipoConta = localStorage.getItem("mathzoneTipoConta") || "aluno";
+
+    if ((tela === "professor" && tipoConta !== "professor") ||
+        (tela === "atividadesAluno" && tipoConta !== "aluno")) {
+        return;
+    }
 
     document.querySelectorAll(".tela").forEach(function(secao) {
 
@@ -344,15 +444,263 @@ function irPara(tela) {
             iniciarClubePro();
         }
 
+        if (tela === "professor") {
+            atualizarPainelProfessor();
+        }
+
+        if (tela === "atividadesAluno") {
+            atualizarAtividadesAluno();
+        }
+
         sincronizarVideosReels(tela);
 
         window.scrollTo({
             top: 0,
-            behavior: "smooth"
+            behavior: movimentoReduzidoAtivo() ? "auto" : "smooth"
         });
 
     }
 
+}
+
+function configurarAreaPorPerfil(tipoConta) {
+    const tipoValido = tipoConta === "professor" ? "professor" : "aluno";
+    document.querySelectorAll("[data-perfil]").forEach(function(elemento) {
+        elemento.hidden = elemento.dataset.perfil !== tipoValido;
+    });
+}
+
+function obterAtividadesTurma() {
+    const atividadesSalvas = localStorage.getItem(chaveAtividadesTurma);
+    const atividades = atividadesSalvas ? JSON.parse(atividadesSalvas) : [];
+
+    if (!Array.isArray(atividades)) {
+        throw new Error("Os dados das atividades não possuem o formato esperado.");
+    }
+
+    return atividades.filter(function(atividade) {
+        return atividade &&
+            typeof atividade.id === "string" &&
+            typeof atividade.professorEmail === "string" &&
+            typeof atividade.alunoEmail === "string" &&
+            typeof atividade.alunoNome === "string" &&
+            typeof atividade.pergunta === "string" &&
+            Number.isFinite(atividade.resposta);
+    });
+}
+
+function salvarAtividadesTurma(atividades) {
+    localStorage.setItem(chaveAtividadesTurma, JSON.stringify(atividades));
+}
+
+function criarAtividadeTurma(event) {
+    event.preventDefault();
+    const alunoEmail = document.getElementById("alunoAtividade").value;
+    const pergunta = document.getElementById("perguntaAtividade").value.trim();
+    const resposta = Number(document.getElementById("respostaAtividade").value);
+    const mensagem = document.getElementById("mensagemProfessor");
+
+    if (!alunoEmail || !pergunta || !Number.isFinite(resposta)) {
+        mensagem.textContent = "Confira o aluno, o enunciado e a resposta correta.";
+        return;
+    }
+
+    try {
+        const contaAluno = obterContasLocaisMathZone().find(function(conta) {
+            return conta.email === alunoEmail &&
+                conta.tipoConta !== "professor";
+        });
+        if (!contaAluno) {
+            mensagem.textContent = "A conta selecionada não é de um aluno. Atualize o painel e tente novamente.";
+            return;
+        }
+
+        const atividades = obterAtividadesTurma();
+        atividades.unshift({
+            id: "atividade-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+            professorEmail: localStorage.getItem("mathzoneEmail") || "",
+            alunoEmail: contaAluno.email,
+            alunoNome: contaAluno.nome,
+            pergunta: pergunta,
+            resposta: resposta,
+            criadaEm: new Date().toISOString(),
+            concluida: false,
+            tentativas: 0
+        });
+        salvarAtividadesTurma(atividades);
+        document.getElementById("formNovaAtividade").reset();
+        atualizarPainelProfessor();
+        mensagem.textContent = "Atividade enviada para " + contaAluno.nome + ".";
+    } catch (erro) {
+        console.error("Não foi possível salvar a atividade da turma.", erro);
+        mensagem.textContent = erro.message || "Não foi possível salvar a atividade neste navegador.";
+    }
+}
+
+function atualizarPainelProfessor() {
+    const seletorAluno = document.getElementById("alunoAtividade");
+    const listaResultados = document.getElementById("listaResultadosProfessor");
+    const alunoSelecionado = seletorAluno.value;
+    let contasAlunos;
+
+    try {
+        contasAlunos = obterContasLocaisMathZone().filter(function(conta) {
+            return conta.tipoConta !== "professor";
+        });
+    } catch (erro) {
+        console.error("Não foi possível carregar as contas dos alunos.", erro);
+        seletorAluno.replaceChildren();
+        seletorAluno.disabled = true;
+        document.querySelector("#formNovaAtividade button[type='submit']").disabled = true;
+        listaResultados.textContent = "Não foi possível carregar os alunos neste navegador.";
+        return;
+    }
+
+    seletorAluno.replaceChildren();
+
+    if (contasAlunos.length === 0) {
+        const opcao = document.createElement("option");
+        opcao.value = "";
+        opcao.textContent = "Nenhuma conta de aluno cadastrada";
+        seletorAluno.appendChild(opcao);
+        seletorAluno.disabled = true;
+        document.querySelector("#formNovaAtividade button[type='submit']").disabled = true;
+    } else {
+        seletorAluno.disabled = false;
+        document.querySelector("#formNovaAtividade button[type='submit']").disabled = false;
+        contasAlunos.forEach(function(conta) {
+            const opcao = document.createElement("option");
+            opcao.value = conta.email;
+            opcao.textContent = conta.nome + " (" + conta.email + ")";
+            seletorAluno.appendChild(opcao);
+        });
+        if (contasAlunos.some(function(conta) { return conta.email === alunoSelecionado; })) {
+            seletorAluno.value = alunoSelecionado;
+        }
+    }
+
+    listaResultados.replaceChildren();
+    try {
+        const atividades = obterAtividadesTurma().filter(function(atividade) {
+            return atividade.professorEmail === (localStorage.getItem("mathzoneEmail") || "");
+        });
+        if (atividades.length === 0) {
+            listaResultados.textContent = "As atividades enviadas aparecerão aqui.";
+            return;
+        }
+
+        atividades.forEach(function(atividade) {
+            const item = document.createElement("article");
+            item.className = "atividade-item";
+            const aluno = document.createElement("strong");
+            aluno.textContent = atividade.alunoNome;
+            const pergunta = document.createElement("p");
+            pergunta.textContent = atividade.pergunta;
+            const status = document.createElement("span");
+            status.className = atividade.concluida ? "atividade-status concluida" : "atividade-status";
+            status.textContent = atividade.concluida
+                ? "Concluída · resposta: " + atividade.respostaAluno
+                : "Pendente · " + (atividade.tentativas || 0) + " tentativa(s)";
+            item.append(aluno, pergunta, status);
+            listaResultados.appendChild(item);
+        });
+    } catch (erro) {
+        console.error("Não foi possível carregar o acompanhamento da turma.", erro);
+        listaResultados.textContent = "Não foi possível carregar os resultados neste navegador.";
+    }
+}
+
+function atualizarAtividadesAluno() {
+    const lista = document.getElementById("listaAtividadesAluno");
+    const mensagem = document.getElementById("mensagemAtividadesAluno");
+    lista.replaceChildren();
+    mensagem.textContent = "";
+
+    try {
+        const emailAluno = localStorage.getItem("mathzoneEmail") || "";
+        const atividades = obterAtividadesTurma().filter(function(atividade) {
+            return atividade.alunoEmail === emailAluno;
+        });
+        if (atividades.length === 0) {
+            lista.textContent = "Ainda não há atividades para você. Quando o professor enviar um exercício, ele aparecerá aqui.";
+            return;
+        }
+
+        atividades.forEach(function(atividade) {
+            const item = document.createElement("article");
+            item.className = "atividade-item";
+            const pergunta = document.createElement("h3");
+            pergunta.textContent = atividade.pergunta;
+            const professor = document.createElement("p");
+            professor.textContent = "Enviado por " + atividade.professorEmail;
+            item.append(pergunta, professor);
+
+            if (atividade.concluida) {
+                const status = document.createElement("span");
+                status.className = "atividade-status concluida";
+                status.textContent = "Concluída! Parabéns pelo esforço.";
+                item.appendChild(status);
+            } else {
+                const formulario = document.createElement("form");
+                formulario.className = "responder-atividade";
+                const rotulo = document.createElement("label");
+                rotulo.textContent = "Sua resposta";
+                const entrada = document.createElement("input");
+                entrada.type = "number";
+                entrada.step = "any";
+                entrada.required = true;
+                entrada.setAttribute("aria-label", "Sua resposta para: " + atividade.pergunta);
+                const botao = document.createElement("button");
+                botao.type = "submit";
+                botao.textContent = "Responder";
+                const feedback = document.createElement("span");
+                feedback.className = "feedback-atividade";
+                feedback.setAttribute("role", "status");
+                formulario.append(rotulo, entrada, botao, feedback);
+                formulario.addEventListener("submit", function(event) {
+                    responderAtividadeTurma(event, atividade.id, entrada, feedback);
+                });
+                item.appendChild(formulario);
+            }
+            lista.appendChild(item);
+        });
+    } catch (erro) {
+        console.error("Não foi possível carregar suas atividades.", erro);
+        mensagem.textContent = erro.message || "Não foi possível carregar as atividades neste navegador.";
+    }
+}
+
+function responderAtividadeTurma(event, idAtividade, entrada, feedback) {
+    event.preventDefault();
+    const resposta = Number(entrada.value);
+
+    try {
+        const atividades = obterAtividadesTurma();
+        const atividade = atividades.find(function(item) {
+            return item.id === idAtividade &&
+                item.alunoEmail === (localStorage.getItem("mathzoneEmail") || "");
+        });
+
+        if (!atividade || atividade.concluida || !Number.isFinite(resposta)) {
+            feedback.textContent = "Não foi possível registrar esta resposta. Atualize a página e tente novamente.";
+            return;
+        }
+
+        atividade.tentativas = (atividade.tentativas || 0) + 1;
+        if (resposta === atividade.resposta) {
+            atividade.concluida = true;
+            atividade.respostaAluno = resposta;
+            salvarAtividadesTurma(atividades);
+            atualizarAtividadesAluno();
+            return;
+        }
+
+        salvarAtividadesTurma(atividades);
+        feedback.textContent = "Ainda não. Revise seus cálculos e tente outra vez.";
+    } catch (erro) {
+        console.error("Não foi possível registrar a resposta da atividade.", erro);
+        feedback.textContent = erro.message || "Não foi possível salvar sua resposta neste navegador.";
+    }
 }
 
 let observadorReels = null;
@@ -365,12 +713,22 @@ function atualizarControleVideoReel(slide, reproduzindo) {
     botao.querySelector("small").textContent = reproduzindo ? "Pausar" : "Assistir";
 }
 
+function exibirMensagemVideoReel(slide, mensagem) {
+    const status = slide.querySelector(".reel-mensagem-video");
+
+    if (status) {
+        status.textContent = mensagem;
+        status.hidden = !mensagem;
+    }
+}
+
 function reproduzirVideoReel(slide) {
     const video = slide.querySelector("video");
     const resultado = video.play();
 
     if (resultado && typeof resultado.then === "function") {
         resultado.then(function() {
+            exibirMensagemVideoReel(slide, "");
             atualizarControleVideoReel(slide, !video.paused);
         }).catch(function(erro) {
             if (erro.name === "AbortError") {
@@ -378,7 +736,12 @@ function reproduzirVideoReel(slide) {
             }
 
             video.controls = true;
+            exibirMensagemVideoReel(
+                slide,
+                "A reprodução automática foi bloqueada. Use os controles do vídeo ou toque em Assistir."
+            );
             atualizarControleVideoReel(slide, false);
+            console.error("Não foi possível iniciar o vídeo do reel.", erro);
         });
     } else {
         atualizarControleVideoReel(slide, !video.paused);
@@ -394,7 +757,7 @@ function sincronizarVideosReels(tela) {
     const feed = document.getElementById("reelsFeed");
     const slides = Array.from(document.querySelectorAll(".reel-slide"));
     const videoFundo = document.querySelector(".hero-video-fundo");
-    const movimentoReduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const movimentoReduzido = movimentoReduzidoAtivo();
 
     slides.forEach(function(slide) {
         const video = slide.querySelector("video");
@@ -408,6 +771,16 @@ function sincronizarVideosReels(tela) {
         });
         video.addEventListener("pause", function() {
             atualizarControleVideoReel(slide, false);
+        });
+        video.addEventListener("loadeddata", function() {
+            exibirMensagemVideoReel(slide, "");
+        });
+        video.addEventListener("error", function() {
+            video.controls = true;
+            exibirMensagemVideoReel(
+                slide,
+                "Não foi possível carregar este vídeo. Abra o site pelo servidor local e tente novamente."
+            );
         });
         video.dataset.controlesConfigurados = "true";
     });
@@ -433,7 +806,7 @@ function sincronizarVideosReels(tela) {
         }
     }
 
-    if (tela !== "reels" || !feed || movimentoReduzido) {
+    if (tela !== "reels" || !feed) {
         slides.forEach(function(slide) {
             pausarVideoReel(slide);
         });
@@ -511,7 +884,7 @@ function moverReel(botao, direcao) {
 
         feed.scrollBy({
             top: distancia,
-            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+            behavior: movimentoReduzidoAtivo() ? "auto" : "smooth"
         });
     }
 }
@@ -1082,7 +1455,7 @@ function montarPostComunidade(postagem) {
     identidade.className = "instagram-post-identidade";
 
     const nome = document.createElement("strong");
-    nome.textContent = "MathZone Run Club";
+    nome.textContent = "Clube de Corrida Mente Turbo";
 
     const categoria = document.createElement("span");
     categoria.textContent = postagem.categoria || postagem.data || "@mathzone.run";
@@ -1112,7 +1485,7 @@ function montarPostComunidade(postagem) {
     } else {
         midia.classList.add("instagram-post-midia-texto");
         const selo = document.createElement("span");
-        selo.textContent = "🏁 MATHZONE · CORRIDA + MATEMÁTICA";
+        selo.textContent = "🏁 MENTE TURBO · CORRIDA + MATEMÁTICA";
         const texto = document.createElement("strong");
         texto.textContent = "Uma ideia nova na pista";
         midia.append(selo, texto);
@@ -1306,7 +1679,7 @@ function desenharComunidade() {
     }
 
     document.querySelectorAll("[data-filtro-comunidade]").forEach(function(botao) {
-        botao.setAttribute("aria-selected", String(botao.dataset.filtroComunidade === filtroAtualComunidade));
+        botao.setAttribute("aria-pressed", String(botao.dataset.filtroComunidade === filtroAtualComunidade));
     });
 }
 
@@ -1372,8 +1745,8 @@ function alternarSeguirComunidade() {
 
     if (!document.getElementById("mensagemComunidade").textContent) {
         exibirMensagemComunidade(estadoComunidade.seguindo
-            ? "Você está seguindo o MathZone Run Club nesta comunidade."
-            : "Você deixou de seguir o MathZone Run Club.");
+            ? "Você está seguindo o Clube de Corrida Mente Turbo nesta comunidade."
+            : "Você deixou de seguir o Clube de Corrida Mente Turbo.");
     }
 }
 
@@ -3197,6 +3570,8 @@ document.addEventListener(
 
         const emailSalvo =
             localStorage.getItem("mathzoneEmail");
+        const tipoConta = localStorage.getItem("mathzoneTipoConta") || "aluno";
+        configurarAreaPorPerfil(tipoConta);
 
 
         if (emailSalvo) {
@@ -3207,8 +3582,13 @@ document.addEventListener(
             document
                 .getElementById("sitePrincipal")
                 .classList.add("visivel");
+            document.querySelector(".link-pular-conteudo").href = "#conteudoPrincipal";
 
-            sincronizarVideosReels("inicio");
+            if (tipoConta === "professor") {
+                irPara("professor");
+            } else {
+                sincronizarVideosReels("inicio");
+            }
 
         } else {
 
