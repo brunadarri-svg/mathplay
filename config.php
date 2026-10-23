@@ -1,7 +1,7 @@
 <?php
 $configuracao = [
     'host' => '__DB_HOST__',
-    'port' => 3306,
+    'port' => '__DB_PORT__',
     'name' => '__DB_NAME__',
     'user' => '__DB_USER__',
     'password' => '__DB_PASS__'

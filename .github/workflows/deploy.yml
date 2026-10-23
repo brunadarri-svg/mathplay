@@ -14,13 +14,38 @@ jobs:
       - name: Baixar o código do repositório
         uses: actions/checkout@v4
 
-      - name: Substituir variaveis de ambiente no config.php
+      - name: Validar e configurar conexão MySQL
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
         run: |
-          sed -i "s/__DB_HOST__/${{ secrets.DB_HOST }}/g" config.php
-          sed -i "s/__DB_PORT__/${{ secrets.DB_PORT }}/g" config.php
-          sed -i "s/__DB_NAME__/${{ secrets.DB_NAME }}/g" config.php
-          sed -i "s/__DB_USER__/${{ secrets.DB_USER }}/g" config.php
-          sed -i "s/__DB_PASS__/${{ secrets.DB_PASS }}/g" config.php
+          for name in DB_HOST DB_PORT DB_NAME DB_USER DB_PASS; do
+            if [ -z "${!name}" ]; then
+              echo "::error::O segredo $name está ausente ou vazio nas configurações do GitHub."
+              exit 1
+            fi
+          done
+
+          if ! [[ "$DB_PORT" =~ ^[0-9]+$ ]]; then
+            echo "::error::O segredo DB_PORT deve conter apenas números."
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          config_path = Path("config.php")
+          config = config_path.read_text()
+          for name in ("HOST", "PORT", "NAME", "USER", "PASS"):
+              value = os.environ[f"DB_{name}"]
+              escaped_value = value.replace("\\", "\\\\").replace("'", "\\'")
+              config = config.replace(f"__DB_{name}__", escaped_value)
+          config_path.write_text(config)
+          PY
 
       - name: Publicar via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
