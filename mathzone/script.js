@@ -4,7 +4,204 @@
 
 const chaveContasLocaisMathZone = "mathzoneContasLocaisV1";
 const iteracoesHashSenhaMathZone = 120000;
-const chaveAtividadesTurma = "menteTurboAtividadesTurmaV1";
+const chaveAtividadesLegadasMathZone = "menteTurboAtividadesTurmaV1";
+const chavesEstadoServidorMathZone = [
+    "mathzoneComunidade",
+    "mathzoneContasPets",
+    "mathzoneRecordesCorrida",
+    "mathzoneColecaoTenisCorrida"
+];
+const chavesEstadoPorContaMathZone = new Set([
+    "mathzoneContasPets",
+    "mathzoneRecordesCorrida",
+    "mathzoneColecaoTenisCorrida"
+]);
+let tokenCsrfMathZone = "";
+let sincronizacaoEstadoAtivaMathZone = false;
+const salvamentosServidorMathZone = new Set();
+
+async function solicitarApiMathZone(acao, dados, metodo) {
+    const verbo = metodo || (dados ? "POST" : "GET");
+    const cabecalhos = { Accept: "application/json" };
+    const opcoes = {
+        method: verbo,
+        credentials: "same-origin",
+        headers: cabecalhos
+    };
+
+    if (dados) {
+        cabecalhos["Content-Type"] = "application/json";
+        cabecalhos["X-CSRF-Token"] = tokenCsrfMathZone;
+        opcoes.body = JSON.stringify(dados);
+    }
+
+    const resposta = await fetch("./api.php?action=" + encodeURIComponent(acao), opcoes);
+    let resultado;
+    try {
+        resultado = await resposta.json();
+    } catch (erro) {
+        throw new Error("O servidor respondeu em um formato inesperado.");
+    }
+
+    if (!resposta.ok || !resultado.ok) {
+        const erro = new Error(resultado.mensagem || "Não foi possível concluir a operação.");
+        erro.codigo = resultado.codigo || "";
+        throw erro;
+    }
+
+    return resultado;
+}
+
+function mostrarErroBancoMathZone(mensagem) {
+    let aviso = document.getElementById("avisoBancoMathZone");
+    if (!aviso) {
+        aviso = document.createElement("div");
+        aviso.id = "avisoBancoMathZone";
+        aviso.setAttribute("role", "alert");
+        aviso.setAttribute("aria-live", "assertive");
+        aviso.style.cssText =
+            "position:fixed;z-index:10000;right:16px;bottom:16px;max-width:min(440px,calc(100vw - 32px));" +
+            "padding:14px 18px;border-radius:12px;background:#8f263d;color:#fff;font:600 14px/1.5 Segoe UI,Arial,sans-serif;" +
+            "box-shadow:0 8px 24px rgba(0,0,0,.22)";
+        document.body.appendChild(aviso);
+    }
+    aviso.textContent = mensagem;
+}
+
+function obterValorEstadoContaMathZone(chave, valor, email) {
+    if (!chavesEstadoPorContaMathZone.has(chave)) {
+        return JSON.parse(valor);
+    }
+
+    const mapa = JSON.parse(valor);
+    return mapa && typeof mapa === "object" && !Array.isArray(mapa)
+        ? mapa[email] === undefined ? null : mapa[email]
+        : null;
+}
+
+async function salvarEstadoServidorMathZone(chave, valor, email) {
+    if (!chavesEstadoServidorMathZone.includes(chave) &&
+        !/^mathzoneDesafioPista:[^:]+:\d{4}-\d{2}-\d{2}$/.test(chave)) {
+        return;
+    }
+
+    const valorConta = obterValorEstadoContaMathZone(chave, valor, email);
+    if (valorConta === null) {
+        return;
+    }
+
+    try {
+        await solicitarApiMathZone("state:write", { chave: chave, valor: valorConta });
+    } catch (erro) {
+        console.error("Não foi possível sincronizar os dados com o banco de dados.", erro);
+        mostrarErroBancoMathZone("Não foi possível salvar seus dados no banco. Verifique a conexão e tente novamente.");
+        throw erro;
+    }
+}
+
+async function carregarEstadoServidorMathZone(email, migrarDadosLocais) {
+    const resposta = await solicitarApiMathZone("state:read");
+    const estado = resposta.estado || {};
+    const chavesDiarias = Object.keys(estado).filter(function(chave) {
+        return chave.indexOf("mathzoneDesafioPista:" + email + ":") === 0;
+    });
+
+    sincronizacaoEstadoAtivaMathZone = false;
+    if (estado.mathzoneComunidade === undefined && !migrarDadosLocais) {
+        localStorage.removeItem("mathzoneComunidade");
+    }
+    chavesEstadoServidorMathZone.concat(chavesDiarias).forEach(function(chave) {
+        if (estado[chave] === undefined) {
+            return;
+        }
+        let valor = estado[chave];
+        if (chavesEstadoPorContaMathZone.has(chave)) {
+            const mapaAtual = JSON.parse(localStorage.getItem(chave) || "{}");
+            mapaAtual[email] = valor;
+            valor = mapaAtual;
+        }
+        Storage.prototype.setItem.call(localStorage, chave, JSON.stringify(valor));
+    });
+
+    if (migrarDadosLocais) {
+        const chavesLocais = chavesEstadoServidorMathZone.concat(
+            Object.keys(localStorage).filter(function(chave) {
+                return chave.indexOf("mathzoneDesafioPista:" + email + ":") === 0;
+            })
+        );
+        for (const chave of chavesLocais) {
+            if (estado[chave] !== undefined) {
+                continue;
+            }
+            const valor = localStorage.getItem(chave);
+            if (valor !== null) {
+                await salvarEstadoServidorMathZone(chave, valor, email);
+            }
+        }
+    }
+
+    sincronizacaoEstadoAtivaMathZone = true;
+}
+
+async function migrarAtividadesLegadasMathZone() {
+    let atividades;
+    try {
+        atividades = JSON.parse(localStorage.getItem(chaveAtividadesLegadasMathZone) || "[]");
+    } catch (erro) {
+        console.error("As atividades antigas não possuem um formato válido.", erro);
+        mostrarErroBancoMathZone("Não foi possível ler as atividades antigas salvas neste navegador.");
+        return;
+    }
+
+    if (!Array.isArray(atividades) || atividades.length === 0) {
+        return;
+    }
+
+    try {
+        await solicitarApiMathZone("activities:import", { atividades: atividades });
+    } catch (erro) {
+        console.error("Não foi possível importar as atividades antigas para o banco.", erro);
+        mostrarErroBancoMathZone("Não foi possível importar algumas atividades antigas da turma.");
+    }
+}
+
+async function inicializarApiMathZone() {
+    const resposta = await solicitarApiMathZone("session", null, "GET");
+    tokenCsrfMathZone = resposta.csrfToken;
+    return resposta.conta;
+}
+
+async function garantirSessaoApiMathZone() {
+    if (!tokenCsrfMathZone) {
+        await inicializarApiMathZone();
+    }
+}
+
+const setItemLocalMathZone = Storage.prototype.setItem;
+Storage.prototype.setItem = function(chave, valor) {
+    setItemLocalMathZone.call(this, chave, valor);
+    if (this !== localStorage || !sincronizacaoEstadoAtivaMathZone) {
+        return;
+    }
+
+    const chaveTexto = String(chave);
+    if (!chavesEstadoServidorMathZone.includes(chaveTexto) &&
+        !/^mathzoneDesafioPista:[^:]+:\d{4}-\d{2}-\d{2}$/.test(chaveTexto)) {
+        return;
+    }
+
+    const email = (localStorage.getItem("mathzoneEmail") || "").trim().toLowerCase();
+    if (!email) {
+        return;
+    }
+
+    const salvamento = salvarEstadoServidorMathZone(chaveTexto, String(valor), email)
+        .catch(function() {})
+        .finally(function() {
+            salvamentosServidorMathZone.delete(salvamento);
+        });
+    salvamentosServidorMathZone.add(salvamento);
+};
 
 async function derivarHashSenhaMathZone(senha, sal) {
     if (!window.crypto || !window.crypto.subtle) {
@@ -112,40 +309,25 @@ async function cadastrarConta(event) {
     }
 
     try {
-        const contas = obterContasLocaisMathZone();
-        if (contas.some(function(conta) { return conta.email === email; })) {
-            mostrarMensagemConta("Já existe uma conta com esse e-mail neste navegador. Entre ou use outro e-mail.", "erro");
-            return;
-        }
-
-        const bytesSal = window.crypto.getRandomValues(new Uint8Array(16));
-        let binarioSal = "";
-        bytesSal.forEach(function(byte) {
-            binarioSal += String.fromCharCode(byte);
-        });
-        const sal = btoa(binarioSal);
-        const hashSenha = await derivarHashSenhaMathZone(senha, sal);
-
-        contas.push({
+        await garantirSessaoApiMathZone();
+        await solicitarApiMathZone("register", {
             nome: nome,
             email: email,
-            sal: sal,
-            hashSenha: hashSenha,
+            senha: senha,
             tipoConta: document.getElementById("tipoContaCadastro").value
         });
-        localStorage.setItem(chaveContasLocaisMathZone, JSON.stringify(contas));
 
         document.getElementById("emailLogin").value = email;
         document.getElementById("senhaLogin").value = "";
         document.getElementById("senhaCadastro").value = "";
         document.getElementById("confirmarSenhaCadastro").value = "";
         mostrarFormulariosConta(false);
-        mostrarMensagemConta("Conta criada neste navegador. Agora entre com seu e-mail e senha.", "sucesso");
+        mostrarMensagemConta("Conta criada com sucesso. Agora entre com seu e-mail e senha.", "sucesso");
         document.getElementById("senhaLogin").focus();
     } catch (erro) {
-        console.error("Não foi possível criar a conta local do MathZone.", erro);
+        console.error("Não foi possível criar a conta Mente Turbo.", erro);
         mostrarMensagemConta(
-            erro.message || "Não foi possível criar a conta neste navegador. Tente novamente.",
+            erro.message || "Não foi possível criar sua conta. Tente novamente.",
             "erro"
         );
     }
@@ -169,25 +351,77 @@ async function entrarMathZone(event) {
     }
 
     try {
-        const conta = obterContasLocaisMathZone().find(function(item) {
-            return item.email === emailNormalizado;
-        });
+        await garantirSessaoApiMathZone();
+        let resposta;
+        let migrarDadosLocais = false;
+        try {
+            resposta = await solicitarApiMathZone("login", {
+                email: emailNormalizado,
+                senha: senha
+            });
+        } catch (erroLogin) {
+            if (erroLogin.codigo !== "login_invalido") {
+                throw erroLogin;
+            }
 
-        if (!conta) {
-            mostrarMensagemConta("Conta não encontrada neste navegador. Use “Criar conta” para começar.", "erro");
-            return;
+            const contaLegada = obterContasLocaisMathZone().find(function(item) {
+                return item.email === emailNormalizado;
+            });
+            if (!contaLegada ||
+                await derivarHashSenhaMathZone(senha, contaLegada.sal) !== contaLegada.hashSenha) {
+                throw erroLogin;
+            }
+
+            try {
+                await solicitarApiMathZone("register", {
+                    nome: contaLegada.nome,
+                    email: contaLegada.email,
+                    senha: senha,
+                    tipoConta: contaLegada.tipoConta === "professor" ? "professor" : "aluno"
+                });
+            } catch (erroCadastro) {
+                if (erroCadastro.codigo !== "email_existente") {
+                    throw erroCadastro;
+                }
+            }
+
+            resposta = await solicitarApiMathZone("login", {
+                email: emailNormalizado,
+                senha: senha
+            });
+            migrarDadosLocais = true;
         }
 
-        const hashInformado = await derivarHashSenhaMathZone(senha, conta.sal);
-        if (hashInformado !== conta.hashSenha) {
-            mostrarMensagemConta("E-mail ou senha incorretos. Confira os dados e tente novamente.", "erro");
-            return;
-        }
-
+        tokenCsrfMathZone = resposta.csrfToken;
+        const conta = resposta.conta;
+        const tipoConta = conta.tipoConta === "professor" ? "professor" : "aluno";
         localStorage.setItem("mathzoneEmail", conta.email);
         localStorage.setItem("mathzoneNome", conta.nome);
-        const tipoConta = conta.tipoConta === "professor" ? "professor" : "aluno";
         localStorage.setItem("mathzoneTipoConta", tipoConta);
+        await carregarEstadoServidorMathZone(conta.email, migrarDadosLocais);
+        await migrarAtividadesLegadasMathZone();
+        if (migrarDadosLocais) {
+            try {
+                const rankingLegado = JSON.parse(localStorage.getItem("mathzoneRanking") || "[]");
+                const jogadorLegado = Array.isArray(rankingLegado)
+                    ? rankingLegado.find(function(item) {
+                        return item && item.email === conta.email && Number.isFinite(item.pontos);
+                    })
+                    : null;
+                if (jogadorLegado && Number.isInteger(jogadorLegado.pontos) && jogadorLegado.pontos > 0) {
+                    let pontosRestantes = Math.min(jogadorLegado.pontos, 1000000);
+                    while (pontosRestantes > 0) {
+                        const lote = Math.min(pontosRestantes, 1000);
+                        await solicitarApiMathZone("points:add", { pontos: lote });
+                        pontosRestantes -= lote;
+                    }
+                }
+            } catch (erroMigracao) {
+                console.error("Não foi possível migrar os pontos antigos para o banco.", erroMigracao);
+                mostrarErroBancoMathZone("Sua conta entrou, mas não foi possível importar os pontos antigos.");
+            }
+        }
+        iniciarComunidade();
         document.getElementById("telaLogin").style.display = "none";
         document.getElementById("sitePrincipal").classList.add("visivel");
         document.querySelector(".link-pular-conteudo").href = "#conteudoPrincipal";
@@ -198,9 +432,9 @@ async function entrarMathZone(event) {
             behavior: movimentoReduzidoAtivo() ? "auto" : "smooth"
         });
     } catch (erro) {
-        console.error("Não foi possível entrar na conta MathZone.", erro);
+        console.error("Não foi possível entrar na conta Mente Turbo.", erro);
         mostrarMensagemConta(
-            erro.message || "Não foi possível acessar sua conta neste navegador.",
+            erro.message || "Não foi possível acessar sua conta. Verifique a conexão com o servidor.",
             "erro"
         );
     }
@@ -237,9 +471,18 @@ function criarConta() {
    SAIR
 ========================================= */
 
-function sair() {
+async function sair() {
 
     sincronizarVideosReels(null);
+
+    sincronizacaoEstadoAtivaMathZone = false;
+    await Promise.all(Array.from(salvamentosServidorMathZone));
+    try {
+        await solicitarApiMathZone("logout", {});
+    } catch (erro) {
+        console.error("Não foi possível encerrar a sessão no servidor.", erro);
+        mostrarErroBancoMathZone("A sessão não foi encerrada no servidor. Verifique a conexão e tente novamente.");
+    }
 
     localStorage.removeItem("mathzoneEmail");
     localStorage.removeItem("mathzoneNome");
@@ -466,35 +709,14 @@ function configurarAreaPorPerfil(tipoConta) {
     });
 }
 
-function obterAtividadesTurma() {
-    const atividadesSalvas = localStorage.getItem(chaveAtividadesTurma);
-    const atividades = atividadesSalvas ? JSON.parse(atividadesSalvas) : [];
-
-    if (!Array.isArray(atividades)) {
-        throw new Error("Os dados das atividades não possuem o formato esperado.");
-    }
-
-    return atividades.filter(function(atividade) {
-        return atividade &&
-            typeof atividade.id === "string" &&
-            typeof atividade.professorEmail === "string" &&
-            typeof atividade.alunoEmail === "string" &&
-            typeof atividade.alunoNome === "string" &&
-            typeof atividade.pergunta === "string" &&
-            Number.isFinite(atividade.resposta);
-    });
-}
-
-function salvarAtividadesTurma(atividades) {
-    localStorage.setItem(chaveAtividadesTurma, JSON.stringify(atividades));
-}
-
-function criarAtividadeTurma(event) {
+async function criarAtividadeTurma(event) {
     event.preventDefault();
     const alunoEmail = document.getElementById("alunoAtividade").value;
     const pergunta = document.getElementById("perguntaAtividade").value.trim();
     const resposta = Number(document.getElementById("respostaAtividade").value);
     const mensagem = document.getElementById("mensagemProfessor");
+    const alunoNome = document.getElementById("alunoAtividade")
+        .selectedOptions[0]?.textContent.split(" (")[0] || alunoEmail;
 
     if (!alunoEmail || !pergunta || !Number.isFinite(resposta)) {
         mensagem.textContent = "Confira o aluno, o enunciado e a resposta correta.";
@@ -502,53 +724,40 @@ function criarAtividadeTurma(event) {
     }
 
     try {
-        const contaAluno = obterContasLocaisMathZone().find(function(conta) {
-            return conta.email === alunoEmail &&
-                conta.tipoConta !== "professor";
-        });
-        if (!contaAluno) {
-            mensagem.textContent = "A conta selecionada não é de um aluno. Atualize o painel e tente novamente.";
-            return;
-        }
-
-        const atividades = obterAtividadesTurma();
-        atividades.unshift({
-            id: "atividade-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
-            professorEmail: localStorage.getItem("mathzoneEmail") || "",
-            alunoEmail: contaAluno.email,
-            alunoNome: contaAluno.nome,
+        await solicitarApiMathZone("activities:create", {
+            alunoEmail: alunoEmail,
             pergunta: pergunta,
-            resposta: resposta,
-            criadaEm: new Date().toISOString(),
-            concluida: false,
-            tentativas: 0
+            resposta: resposta
         });
-        salvarAtividadesTurma(atividades);
         document.getElementById("formNovaAtividade").reset();
-        atualizarPainelProfessor();
-        mensagem.textContent = "Atividade enviada para " + contaAluno.nome + ".";
+        await atualizarPainelProfessor();
+        mensagem.textContent = "Atividade enviada para " + alunoNome + ".";
     } catch (erro) {
         console.error("Não foi possível salvar a atividade da turma.", erro);
-        mensagem.textContent = erro.message || "Não foi possível salvar a atividade neste navegador.";
+        mensagem.textContent = erro.message || "Não foi possível salvar a atividade no banco de dados.";
     }
 }
 
-function atualizarPainelProfessor() {
+async function atualizarPainelProfessor() {
     const seletorAluno = document.getElementById("alunoAtividade");
     const listaResultados = document.getElementById("listaResultadosProfessor");
     const alunoSelecionado = seletorAluno.value;
     let contasAlunos;
+    let atividades;
 
     try {
-        contasAlunos = obterContasLocaisMathZone().filter(function(conta) {
-            return conta.tipoConta !== "professor";
-        });
+        const resultados = await Promise.all([
+            solicitarApiMathZone("students:list", null, "GET"),
+            solicitarApiMathZone("activities:list", null, "GET")
+        ]);
+        contasAlunos = resultados[0].alunos;
+        atividades = resultados[1].atividades;
     } catch (erro) {
-        console.error("Não foi possível carregar as contas dos alunos.", erro);
+        console.error("Não foi possível carregar os dados da turma.", erro);
         seletorAluno.replaceChildren();
         seletorAluno.disabled = true;
         document.querySelector("#formNovaAtividade button[type='submit']").disabled = true;
-        listaResultados.textContent = "Não foi possível carregar os alunos neste navegador.";
+        listaResultados.textContent = "Não foi possível carregar os alunos e as atividades do banco de dados.";
         return;
     }
 
@@ -576,47 +785,37 @@ function atualizarPainelProfessor() {
     }
 
     listaResultados.replaceChildren();
-    try {
-        const atividades = obterAtividadesTurma().filter(function(atividade) {
-            return atividade.professorEmail === (localStorage.getItem("mathzoneEmail") || "");
-        });
-        if (atividades.length === 0) {
-            listaResultados.textContent = "As atividades enviadas aparecerão aqui.";
-            return;
-        }
-
-        atividades.forEach(function(atividade) {
-            const item = document.createElement("article");
-            item.className = "atividade-item";
-            const aluno = document.createElement("strong");
-            aluno.textContent = atividade.alunoNome;
-            const pergunta = document.createElement("p");
-            pergunta.textContent = atividade.pergunta;
-            const status = document.createElement("span");
-            status.className = atividade.concluida ? "atividade-status concluida" : "atividade-status";
-            status.textContent = atividade.concluida
-                ? "Concluída · resposta: " + atividade.respostaAluno
-                : "Pendente · " + (atividade.tentativas || 0) + " tentativa(s)";
-            item.append(aluno, pergunta, status);
-            listaResultados.appendChild(item);
-        });
-    } catch (erro) {
-        console.error("Não foi possível carregar o acompanhamento da turma.", erro);
-        listaResultados.textContent = "Não foi possível carregar os resultados neste navegador.";
+    if (atividades.length === 0) {
+        listaResultados.textContent = "As atividades enviadas aparecerão aqui.";
+        return;
     }
+
+    atividades.forEach(function(atividade) {
+        const item = document.createElement("article");
+        item.className = "atividade-item";
+        const aluno = document.createElement("strong");
+        aluno.textContent = atividade.alunoNome;
+        const pergunta = document.createElement("p");
+        pergunta.textContent = atividade.pergunta;
+        const status = document.createElement("span");
+        status.className = atividade.concluida ? "atividade-status concluida" : "atividade-status";
+        status.textContent = atividade.concluida
+            ? "Concluída · resposta: " + atividade.respostaAluno
+            : "Pendente · " + (atividade.tentativas || 0) + " tentativa(s)";
+        item.append(aluno, pergunta, status);
+        listaResultados.appendChild(item);
+    });
 }
 
-function atualizarAtividadesAluno() {
+async function atualizarAtividadesAluno() {
     const lista = document.getElementById("listaAtividadesAluno");
     const mensagem = document.getElementById("mensagemAtividadesAluno");
     lista.replaceChildren();
     mensagem.textContent = "";
 
     try {
-        const emailAluno = localStorage.getItem("mathzoneEmail") || "";
-        const atividades = obterAtividadesTurma().filter(function(atividade) {
-            return atividade.alunoEmail === emailAluno;
-        });
+        const resposta = await solicitarApiMathZone("activities:list", null, "GET");
+        const atividades = resposta.atividades;
         if (atividades.length === 0) {
             lista.textContent = "Ainda não há atividades para você. Quando o professor enviar um exercício, ele aparecerá aqui.";
             return;
@@ -662,40 +861,27 @@ function atualizarAtividadesAluno() {
         });
     } catch (erro) {
         console.error("Não foi possível carregar suas atividades.", erro);
-        mensagem.textContent = erro.message || "Não foi possível carregar as atividades neste navegador.";
+        mensagem.textContent = erro.message || "Não foi possível carregar as atividades do banco de dados.";
     }
 }
 
-function responderAtividadeTurma(event, idAtividade, entrada, feedback) {
+async function responderAtividadeTurma(event, idAtividade, entrada, feedback) {
     event.preventDefault();
     const resposta = Number(entrada.value);
 
     try {
-        const atividades = obterAtividadesTurma();
-        const atividade = atividades.find(function(item) {
-            return item.id === idAtividade &&
-                item.alunoEmail === (localStorage.getItem("mathzoneEmail") || "");
+        const resultado = await solicitarApiMathZone("activities:answer", {
+            id: idAtividade,
+            resposta: resposta
         });
-
-        if (!atividade || atividade.concluida || !Number.isFinite(resposta)) {
-            feedback.textContent = "Não foi possível registrar esta resposta. Atualize a página e tente novamente.";
+        if (resultado.correta) {
+            await atualizarAtividadesAluno();
             return;
         }
-
-        atividade.tentativas = (atividade.tentativas || 0) + 1;
-        if (resposta === atividade.resposta) {
-            atividade.concluida = true;
-            atividade.respostaAluno = resposta;
-            salvarAtividadesTurma(atividades);
-            atualizarAtividadesAluno();
-            return;
-        }
-
-        salvarAtividadesTurma(atividades);
         feedback.textContent = "Ainda não. Revise seus cálculos e tente outra vez.";
     } catch (erro) {
         console.error("Não foi possível registrar a resposta da atividade.", erro);
-        feedback.textContent = erro.message || "Não foi possível salvar sua resposta neste navegador.";
+        feedback.textContent = erro.message || "Não foi possível salvar sua resposta no banco de dados.";
     }
 }
 
@@ -1540,37 +1726,17 @@ function publicarNaComunidade(event) {
    RANKING
 ========================================= */
 
-const chaveRanking = "mathzoneRanking";
-
-
-function obterRanking() {
-
-    try {
-
-        const rankingSalvo = JSON.parse(localStorage.getItem(chaveRanking) || "[]");
-
-        if (!Array.isArray(rankingSalvo)) {
-            return [];
-        }
-
-        return rankingSalvo
-            .filter(function(jogador) {
-                return jogador && typeof jogador.email === "string" && Number.isFinite(jogador.pontos);
-            })
-            .sort(function(a, b) {
-                return b.pontos - a.pontos;
-            });
-
-    } catch (erro) {
-
-        return [];
-
-    }
-
+async function obterRanking() {
+    const resposta = await solicitarApiMathZone("ranking", null, "GET");
+    return resposta.ranking.filter(function(jogador) {
+        return jogador && typeof jogador.email === "string" && Number.isFinite(Number(jogador.pontos));
+    }).map(function(jogador) {
+        return { email: jogador.email, pontos: Number(jogador.pontos) };
+    });
 }
 
 
-function registrarPontuacao(pontos) {
+async function registrarPontuacao(pontos) {
 
     const email = (localStorage.getItem("mathzoneEmail") || "").trim().toLowerCase();
 
@@ -1578,19 +1744,15 @@ function registrarPontuacao(pontos) {
         return;
     }
 
-    const ranking = obterRanking();
-    const jogador = ranking.find(function(item) {
-        return item.email === email;
-    });
-
-    if (jogador) {
-        jogador.pontos += pontos;
-    } else {
-        ranking.push({ email: email, pontos: pontos });
+    try {
+        await solicitarApiMathZone("points:add", { pontos: pontos });
+        if (document.getElementById("ranking").classList.contains("ativa")) {
+            await atualizarRanking();
+        }
+    } catch (erro) {
+        console.error("Não foi possível registrar a pontuação no banco de dados.", erro);
+        mostrarErroBancoMathZone("Não foi possível registrar seus pontos no banco. Atualize a página e tente novamente.");
     }
-
-    localStorage.setItem(chaveRanking, JSON.stringify(ranking));
-
 }
 
 
@@ -1615,15 +1777,26 @@ function criarItemPodio(jogador, posicao) {
 }
 
 
-function atualizarRanking() {
-
-    const ranking = obterRanking();
+async function atualizarRanking() {
     const podio = document.getElementById("podioRanking");
     const demais = document.getElementById("demaisRanking");
     const lista = document.getElementById("listaRanking");
 
     podio.innerHTML = "";
     lista.innerHTML = "";
+
+    let ranking;
+    try {
+        ranking = await obterRanking();
+    } catch (erro) {
+        console.error("Não foi possível carregar o ranking do banco de dados.", erro);
+        const mensagemErro = document.createElement("p");
+        mensagemErro.className = "ranking-vazio";
+        mensagemErro.textContent = "Não foi possível carregar o ranking. Verifique a conexão e tente novamente.";
+        podio.appendChild(mensagemErro);
+        demais.hidden = true;
+        return;
+    }
 
     if (ranking.length === 0) {
         const vazio = document.createElement("p");
@@ -3496,40 +3669,43 @@ window.addEventListener("blur", function() {
 
 document.addEventListener(
     "DOMContentLoaded",
-    function() {
+    async function() {
 
         iniciarComunidade();
         iniciarPitStopMatematico();
         iniciarAcessibilidade();
 
-        const emailSalvo =
-            localStorage.getItem("mathzoneEmail");
-        const tipoConta = localStorage.getItem("mathzoneTipoConta") || "aluno";
-        configurarAreaPorPerfil(tipoConta);
+        document.getElementById("telaLogin").style.display = "flex";
+        configurarAreaPorPerfil("aluno");
 
-
-        if (emailSalvo) {
-
-            document.getElementById("telaLogin").style.display =
-                "none";
-
-            document
-                .getElementById("sitePrincipal")
-                .classList.add("visivel");
-            document.querySelector(".link-pular-conteudo").href = "#conteudoPrincipal";
-
-            if (tipoConta === "professor") {
-                irPara("professor");
-            } else {
-                sincronizarVideosReels("inicio");
+        try {
+            const conta = await inicializarApiMathZone();
+            if (!conta) {
+                localStorage.removeItem("mathzoneEmail");
+                localStorage.removeItem("mathzoneNome");
+                localStorage.removeItem("mathzoneTipoConta");
+                return;
             }
 
-        } else {
+            const tipoConta = conta.accountType === "professor" ? "professor" : "aluno";
+            localStorage.setItem("mathzoneEmail", conta.email);
+            localStorage.setItem("mathzoneNome", conta.name);
+            localStorage.setItem("mathzoneTipoConta", tipoConta);
+            await carregarEstadoServidorMathZone(conta.email, false);
+            await migrarAtividadesLegadasMathZone();
+            iniciarComunidade();
 
-            document.getElementById("telaLogin").style.display =
-                "flex";
-
+            document.getElementById("telaLogin").style.display = "none";
+            document.getElementById("sitePrincipal").classList.add("visivel");
+            document.querySelector(".link-pular-conteudo").href = "#conteudoPrincipal";
+            configurarAreaPorPerfil(tipoConta);
+            irPara(tipoConta === "professor" ? "professor" : "inicio");
+        } catch (erro) {
+            console.error("Não foi possível iniciar a sessão Mente Turbo.", erro);
+            mostrarMensagemConta(
+                "Não foi possível conectar ao servidor e ao banco de dados. Verifique a configuração e tente novamente.",
+                "erro"
+            );
         }
-
     }
 );
