@@ -79,9 +79,10 @@ function chaveEstadoPermitida(string $chave): bool
 }
 
 try {
-    $configuracao = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php';
+    $configuracao = require __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
     $pdo = new PDO(
-        'mysql:host=' . $configuracao['host'] . ';dbname=' . $configuracao['name'] . ';charset=utf8mb4',
+        'mysql:host=' . $configuracao['host'] . ';port=' . $configuracao['port'] .
+            ';dbname=' . $configuracao['name'] . ';charset=utf8mb4',
         $configuracao['user'],
         $configuracao['password'],
         [
