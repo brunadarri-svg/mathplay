@@ -440,10 +440,6 @@ function irPara(tela) {
             atualizarRecompensas();
         }
 
-        if (tela === "clubePro") {
-            iniciarClubePro();
-        }
-
         if (tela === "professor") {
             atualizarPainelProfessor();
         }
@@ -1078,248 +1074,6 @@ function responderDesafioDiario(event) {
     feedback.textContent = "Na mosca! " + desafioAtualPista.explicacao + " +10 pontos para você.";
     feedback.classList.add("correto");
 }
-
-/* =========================================
-   CLUBE PRO MATEMÁTICO
-========================================= */
-
-let analiseTreinoClubePro = null;
-
-function chaveHistoricoClubePro() {
-    const email = (localStorage.getItem("mathzoneEmail") || "visitante").trim().toLowerCase();
-    return "mathzoneHistoricoClubePro:" + email;
-}
-
-function chaveDesafioClubePro(data) {
-    const email = (localStorage.getItem("mathzoneEmail") || "visitante").trim().toLowerCase();
-    return "mathzoneDesafioClubePro:" + email + ":" + chaveDataLocal(data);
-}
-
-function obterHistoricoClubePro() {
-    try {
-        const salvo = localStorage.getItem(chaveHistoricoClubePro());
-        if (!salvo) {
-            return [];
-        }
-
-        const historico = JSON.parse(salvo);
-        if (!Array.isArray(historico)) {
-            throw new Error("O histórico salvo não possui o formato esperado.");
-        }
-
-        return historico.filter(function(treino) {
-            return treino &&
-                Number.isFinite(treino.distancia) &&
-                treino.distancia > 0 &&
-                Number.isFinite(treino.tempoSegundos) &&
-                treino.tempoSegundos > 0 &&
-                typeof treino.criadoEm === "string" &&
-                Number.isFinite(Date.parse(treino.criadoEm));
-        });
-    } catch (erro) {
-        console.error("Não foi possível carregar o histórico do Clube Pro.", erro);
-        document.getElementById("mensagemHistoricoClubePro").textContent =
-            "Não foi possível carregar o histórico salvo neste navegador.";
-        return [];
-    }
-}
-
-function analisarTreinoClubePro(event) {
-    event.preventDefault();
-
-    const distancia = Number(document.getElementById("distanciaClubePro").value);
-    const minutos = Number(document.getElementById("minutosClubePro").value);
-    const segundos = Number(document.getElementById("segundosClubePro").value);
-    const tempoSegundos = minutos * 60 + segundos;
-    const feedback = document.getElementById("feedbackCalculadoraClubePro");
-    const resultados = document.getElementById("resultadosClubePro");
-
-    if (!Number.isFinite(distancia) || distancia < 0.1 || distancia > 100 ||
-        !Number.isFinite(tempoSegundos) || tempoSegundos <= 0) {
-        analiseTreinoClubePro = null;
-        document.getElementById("salvarTreinoClubePro").disabled = true;
-        resultados.setAttribute("data-erro", "true");
-        feedback.textContent = "Informe uma distância entre 0,1 e 100 km e um tempo maior que zero.";
-        return;
-    }
-
-    const ritmoSegundosKm = tempoSegundos / distancia;
-    const velocidadeKmH = distancia / (tempoSegundos / 3600);
-    analiseTreinoClubePro = {
-        distancia: distancia,
-        tempoSegundos: tempoSegundos,
-        ritmoSegundosKm: ritmoSegundosKm,
-        velocidadeKmH: velocidadeKmH,
-        criadoEm: new Date().toISOString()
-    };
-
-    const formatoDecimal = new Intl.NumberFormat("pt-BR", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1
-    });
-
-    resultados.removeAttribute("data-erro");
-    document.getElementById("ritmoClubePro").textContent =
-        formatarTempoPista(ritmoSegundosKm) + " /km";
-    document.getElementById("velocidadeClubePro").textContent =
-        formatoDecimal.format(velocidadeKmH) + " km/h";
-    document.getElementById("parcialClubePro").textContent =
-        formatarTempoPista(ritmoSegundosKm * 0.4);
-    document.getElementById("projecaoClubePro").textContent =
-        formatarTempoPista(ritmoSegundosKm * 10);
-    document.getElementById("salvarTreinoClubePro").disabled = false;
-    feedback.textContent = "Análise pronta. Salve para incluir no seu histórico.";
-}
-
-function salvarTreinoClubePro() {
-    if (!analiseTreinoClubePro) {
-        document.getElementById("feedbackCalculadoraClubePro").textContent =
-            "Calcule uma análise antes de salvar o treino.";
-        return;
-    }
-
-    try {
-        const historico = obterHistoricoClubePro();
-        historico.unshift(analiseTreinoClubePro);
-        localStorage.setItem(chaveHistoricoClubePro(), JSON.stringify(historico.slice(0, 30)));
-        analiseTreinoClubePro = null;
-        document.getElementById("salvarTreinoClubePro").disabled = true;
-        document.getElementById("feedbackCalculadoraClubePro").textContent =
-            "Treino salvo. Seus números já aparecem no histórico.";
-        atualizarHistoricoClubePro();
-    } catch (erro) {
-        console.error("Não foi possível salvar o treino do Clube Pro.", erro);
-        document.getElementById("feedbackCalculadoraClubePro").textContent =
-            "Não foi possível salvar o treino neste navegador.";
-    }
-}
-
-function atualizarHistoricoClubePro() {
-    const lista = document.getElementById("listaHistoricoClubePro");
-    const vazio = document.getElementById("mensagemHistoricoClubePro");
-    const botaoLimpar = document.getElementById("limparHistoricoClubePro");
-    const historico = obterHistoricoClubePro();
-    const totalDistancia = historico.reduce(function(total, treino) {
-        return total + treino.distancia;
-    }, 0);
-    const totalTempo = historico.reduce(function(total, treino) {
-        return total + treino.tempoSegundos;
-    }, 0);
-
-    document.getElementById("totalTreinosClubePro").textContent = String(historico.length);
-    document.getElementById("distanciaTotalClubePro").textContent =
-        new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(totalDistancia) + " km";
-    document.getElementById("ritmoMedioClubePro").textContent = historico.length
-        ? formatarTempoPista(totalTempo / totalDistancia) + " /km"
-        : "—";
-
-    lista.replaceChildren();
-    vazio.hidden = historico.length > 0;
-    botaoLimpar.hidden = historico.length === 0;
-
-    historico.forEach(function(treino) {
-        const item = document.createElement("li");
-        const informacao = document.createElement("div");
-        const data = document.createElement("time");
-        const distancia = document.createElement("strong");
-        const metrica = document.createElement("span");
-        const instante = new Date(treino.criadoEm);
-
-        item.className = "clube-pro-treino-item";
-        data.dateTime = treino.criadoEm;
-        data.textContent = instante.toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-        });
-        distancia.textContent =
-            new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(treino.distancia) + " km";
-        metrica.textContent =
-            formatarTempoPista(treino.tempoSegundos) + " · " +
-            formatarTempoPista(treino.tempoSegundos / treino.distancia) + " min/km";
-        informacao.append(data, distancia, metrica);
-        item.append(informacao);
-        lista.append(item);
-    });
-}
-
-function iniciarDesafioClubePro() {
-    const resposta = document.getElementById("respostaDesafioClubePro");
-    const botao = document.getElementById("botaoDesafioClubePro");
-    const feedback = document.getElementById("feedbackDesafioClubePro");
-
-    try {
-        if (localStorage.getItem(chaveDesafioClubePro(new Date())) === "concluido") {
-            resposta.disabled = true;
-            botao.disabled = true;
-            feedback.textContent = "Desafio de hoje concluído! Volte amanhã para ganhar mais pontos.";
-            feedback.classList.add("correto");
-        } else {
-            resposta.disabled = false;
-            botao.disabled = false;
-            feedback.textContent = "";
-            feedback.classList.remove("correto", "incorreto");
-        }
-    } catch (erro) {
-        console.error("Não foi possível verificar o desafio diário do Clube Pro.", erro);
-        feedback.textContent = "Não foi possível verificar seu desafio salvo neste navegador.";
-        feedback.classList.add("incorreto");
-    }
-}
-
-function responderDesafioClubePro(event) {
-    event.preventDefault();
-
-    const resposta = Number(document.getElementById("respostaDesafioClubePro").value);
-    const feedback = document.getElementById("feedbackDesafioClubePro");
-    const estaCorreta = Number.isFinite(resposta) && Math.abs(resposta - 5.4) < 0.005;
-
-    feedback.classList.remove("correto", "incorreto");
-    if (!estaCorreta) {
-        feedback.textContent = "Ainda não. Calcule o tempo de cada trecho, some e divida por 5 km.";
-        feedback.classList.add("incorreto");
-        return;
-    }
-
-    try {
-        localStorage.setItem(chaveDesafioClubePro(new Date()), "concluido");
-    } catch (erro) {
-        console.error("Não foi possível salvar a conclusão do desafio do Clube Pro.", erro);
-        feedback.textContent = "Não foi possível registrar sua resposta. Tente novamente.";
-        feedback.classList.add("incorreto");
-        return;
-    }
-
-    registrarPontuacao(10);
-    registrarPontosTreino(10);
-    document.getElementById("respostaDesafioClubePro").disabled = true;
-    document.getElementById("botaoDesafioClubePro").disabled = true;
-    feedback.textContent = "Correto! O ritmo médio é 5,4 min/km: 5:24 por quilômetro. +10 pontos.";
-    feedback.classList.add("correto");
-}
-
-function limparHistoricoClubePro() {
-    if (!window.confirm("Deseja apagar o histórico de treinos deste dispositivo?")) {
-        return;
-    }
-
-    try {
-        localStorage.removeItem(chaveHistoricoClubePro());
-        document.getElementById("feedbackCalculadoraClubePro").textContent =
-            "Histórico apagado deste dispositivo.";
-        atualizarHistoricoClubePro();
-    } catch (erro) {
-        console.error("Não foi possível apagar o histórico do Clube Pro.", erro);
-        document.getElementById("mensagemHistoricoClubePro").textContent =
-            "Não foi possível apagar o histórico salvo neste navegador.";
-    }
-}
-
-function iniciarClubePro() {
-    atualizarHistoricoClubePro();
-    iniciarDesafioClubePro();
-}
-
 
 /* =========================================
    COMUNIDADE MATHZONE
@@ -2454,6 +2208,187 @@ function finalizarEstrategia() {
     );
 }
 
+const problemasRevezamento = [
+    {
+        tema: "DISTÂNCIA",
+        pergunta: "A pista tem 400 m por volta. Quantos metros são 3 voltas?",
+        opcoes: ["800 m", "1.200 m", "1.600 m", "3.400 m"],
+        resposta: "1.200 m",
+        explicacao: "São 3 voltas de 400 m: 3 × 400 = 1.200 m."
+    },
+    {
+        tema: "FRAÇÕES",
+        pergunta: "Uma atleta percorreu 3/4 de 800 m. Quantos metros ela correu?",
+        opcoes: ["200 m", "400 m", "600 m", "700 m"],
+        resposta: "600 m",
+        explicacao: "Divida 800 por 4 e multiplique por 3: 200 × 3 = 600 m."
+    },
+    {
+        tema: "TEMPO",
+        pergunta: "Uma equipe corre 2 km em 10 minutos. Mantendo o ritmo, quanto leva para correr 6 km?",
+        opcoes: ["20 min", "25 min", "30 min", "60 min"],
+        resposta: "30 min",
+        explicacao: "6 km é 3 vezes 2 km. Então, 10 × 3 = 30 minutos."
+    },
+    {
+        tema: "PORCENTAGEM",
+        pergunta: "De 200 participantes, 25% escolheram a corrida de 5 km. Quantos participantes são?",
+        opcoes: ["25", "40", "50", "75"],
+        resposta: "50",
+        explicacao: "25% é um quarto. Um quarto de 200 é 200 ÷ 4 = 50."
+    },
+    {
+        tema: "PROPORÇÃO",
+        pergunta: "Cada integrante corre 1,5 km. Qual é a distância de uma equipe com 4 integrantes?",
+        opcoes: ["4,5 km", "5 km", "6 km", "7,5 km"],
+        resposta: "6 km",
+        explicacao: "Multiplique a distância de cada integrante pelo total: 1,5 × 4 = 6 km."
+    },
+    {
+        tema: "RITMO MÉDIO",
+        pergunta: "Uma corredora percorre 5 km em 25 minutos. Qual é o ritmo médio por quilômetro?",
+        opcoes: ["4 min/km", "5 min/km", "10 min/km", "20 min/km"],
+        resposta: "5 min/km",
+        explicacao: "Divida o tempo pela distância: 25 ÷ 5 = 5 minutos por quilômetro."
+    }
+];
+
+let etapaRevezamento = 0;
+let pontosRevezamento = 0;
+let acertosRevezamento = 0;
+let sequenciaRevezamento = 0;
+let respostasRevezamentoBloqueadas = false;
+
+function abrirRevezamentoMatematico() {
+    limparTemporizadoresDesafios();
+    etapaRevezamento = 0;
+    pontosRevezamento = 0;
+    acertosRevezamento = 0;
+    sequenciaRevezamento = 0;
+    respostasRevezamentoBloqueadas = false;
+    document.getElementById("fimRevezamento").hidden = true;
+    document.getElementById("feedbackRevezamento").textContent = "";
+    document.getElementById("pontosRevezamento").textContent = "0 pts";
+    abrirModal("revezamentoMatematico");
+    mostrarEtapaRevezamento();
+}
+
+function atualizarProgressoRevezamento() {
+    const progresso = Math.round(etapaRevezamento / problemasRevezamento.length * 100);
+    const trilho = document.querySelector(".revezamento-trilho");
+
+    atualizarTrilhoDesafio("barraRevezamento", progresso);
+    trilho.setAttribute("aria-valuenow", String(etapaRevezamento));
+    trilho.setAttribute(
+        "aria-valuetext",
+        etapaRevezamento + " de " + problemasRevezamento.length + " etapas"
+    );
+    document.getElementById("iconeCorredorRevezamento").style.left = progresso + "%";
+}
+
+function mostrarEtapaRevezamento() {
+    if (etapaRevezamento >= problemasRevezamento.length) {
+        finalizarRevezamento();
+        return;
+    }
+
+    const problema = problemasRevezamento[etapaRevezamento];
+    document.getElementById("etapaRevezamento").textContent =
+        "ETAPA " + (etapaRevezamento + 1) + " DE " + problemasRevezamento.length;
+    document.getElementById("sequenciaRevezamento").textContent =
+        "SEQUÊNCIA " + sequenciaRevezamento;
+    document.getElementById("temaRevezamento").textContent = problema.tema;
+    document.getElementById("perguntaRevezamento").textContent = problema.pergunta;
+    document.getElementById("feedbackRevezamento").textContent = "";
+    document.getElementById("feedbackRevezamento").className = "desafio-feedback";
+    document.getElementById("fimRevezamento").hidden = true;
+    atualizarProgressoRevezamento();
+
+    const respostas = document.getElementById("respostasRevezamento");
+    respostas.replaceChildren();
+    problema.opcoes.forEach(function(opcao) {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "resposta-estrategia";
+        botao.textContent = opcao;
+        botao.onclick = function() {
+            responderRevezamento(opcao);
+        };
+        respostas.appendChild(botao);
+    });
+}
+
+function responderRevezamento(resposta) {
+    if (respostasRevezamentoBloqueadas || etapaRevezamento >= problemasRevezamento.length) {
+        return;
+    }
+
+    respostasRevezamentoBloqueadas = true;
+    const problema = problemasRevezamento[etapaRevezamento];
+    const acertou = resposta === problema.resposta;
+
+    document.querySelectorAll("#respostasRevezamento button").forEach(function(botao) {
+        botao.disabled = true;
+        if (botao.textContent === problema.resposta) {
+            botao.classList.add("resposta-correta");
+        } else if (!acertou && botao.textContent === resposta) {
+            botao.classList.add("resposta-incorreta");
+        }
+    });
+
+    const feedback = document.getElementById("feedbackRevezamento");
+    if (acertou) {
+        acertosRevezamento++;
+        sequenciaRevezamento++;
+        const ganho = 20 + (sequenciaRevezamento > 1 ? 5 : 0);
+        pontosRevezamento += ganho;
+        feedback.textContent = "🏁 Acertou! +" + ganho + " pontos. " + problema.explicacao;
+        feedback.classList.add("feedback-correto");
+        registrarPontuacao(ganho);
+        registrarPontosTreino(ganho);
+    } else {
+        sequenciaRevezamento = 0;
+        feedback.textContent = "A resposta era " + problema.resposta + ". " + problema.explicacao;
+        feedback.classList.add("feedback-incorreto");
+    }
+
+    document.getElementById("pontosRevezamento").textContent = pontosRevezamento + " pts";
+    etapaRevezamento++;
+    document.getElementById("sequenciaRevezamento").textContent =
+        "SEQUÊNCIA " + sequenciaRevezamento;
+    document.getElementById("etapaRevezamento").textContent =
+        etapaRevezamento >= problemasRevezamento.length
+            ? "LINHA DE CHEGADA"
+            : "TRECHO " + etapaRevezamento + " DE " + problemasRevezamento.length;
+    atualizarProgressoRevezamento();
+
+    temporizadorDesafio = setTimeout(function() {
+        temporizadorDesafio = null;
+        respostasRevezamentoBloqueadas = false;
+        mostrarEtapaRevezamento();
+    }, 1400);
+}
+
+function finalizarRevezamento() {
+    atualizarProgressoRevezamento();
+    document.getElementById("etapaRevezamento").textContent = "LINHA DE CHEGADA";
+    document.getElementById("respostasRevezamento").replaceChildren();
+    document.getElementById("feedbackRevezamento").textContent = "";
+    const totalEtapas = problemasRevezamento.length;
+    const aproveitamento = Math.round(acertosRevezamento / totalEtapas * 100);
+
+    mostrarFimDesafio(
+        document.getElementById("fimRevezamento"),
+        aproveitamento === 100 ? "🏆 Revezamento perfeito!" : "🏁 Revezamento concluído!",
+        "Você acertou " + acertosRevezamento + " de " + totalEtapas +
+            " etapas (" + aproveitamento + "%) e conquistou " + pontosRevezamento +
+            " pontos. " + (acertosRevezamento === totalEtapas
+                ? "Sua equipe cruzou a linha de chegada sem errar!"
+                : "Cada explicação é um novo treino para a próxima corrida."),
+        abrirRevezamentoMatematico
+    );
+}
+
 function abrirSprintMental() {
     limparTemporizadoresDesafios();
     pontosSprint = 0;
@@ -3565,7 +3500,6 @@ document.addEventListener(
 
         iniciarComunidade();
         iniciarPitStopMatematico();
-        iniciarClubePro();
         iniciarAcessibilidade();
 
         const emailSalvo =

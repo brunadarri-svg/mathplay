@@ -395,14 +395,6 @@
 
                 <button
                     type="button"
-                    data-tela="clubePro"
-                    onclick="irPara('clubePro')"
-                >
-                    Clube Pro
-                </button>
-
-                <button
-                    type="button"
                     data-tela="recompensas"
                     onclick="irPara('recompensas')"
                 >
@@ -624,15 +616,6 @@
 
                 </div>
 
-                <aside class="clube-pro-chamada">
-                    <div>
-                        <span>CLUBE PRO · GRATUITO</span>
-                        <h3>Mais estratégia para cada quilômetro.</h3>
-                        <p>Calcule parciais, estime tempos de prova e ganhe pontos resolvendo um desafio avançado de ritmo.</p>
-                    </div>
-                    <button type="button" onclick="irPara('clubePro')">Explorar Clube Pro <span aria-hidden="true">→</span></button>
-                </aside>
-
                 <section class="pit-stop-matematico" aria-labelledby="tituloPitStop">
                     <div class="pit-stop-intro">
                         <span>ÁREA DE ESTRATÉGIA</span>
@@ -697,99 +680,6 @@
 
 
             <!-- ============================= -->
-            <!-- CLUBE PRO -->
-            <!-- ============================= -->
-
-            <section id="clubePro" class="tela clube-pro-tela">
-
-                <div class="clube-pro-hero">
-                    <div class="clube-pro-hero-texto">
-                        <span class="clube-pro-etiqueta"><span aria-hidden="true">✦</span> CLUBE PRO · GRATUITO</span>
-                        <h2>Transforme cada treino em <strong>matemática de corrida.</strong></h2>
-                        <p>Analise seu ritmo, compare parciais e acompanhe sua evolução com ferramentas feitas para a pista.</p>
-                        <div class="clube-pro-acoes">
-                            <a href="#calculadoraClubePro">Analisar um treino <span aria-hidden="true">↓</span></a>
-                            <span>Sem cobrança · Dados salvos neste dispositivo</span>
-                        </div>
-                    </div>
-                    <div class="clube-pro-resumo" aria-label="Resumo do seu histórico">
-                        <div><span>TREINOS REGISTRADOS</span><strong id="totalTreinosClubePro">0</strong></div>
-                        <div><span>DISTÂNCIA ACUMULADA</span><strong id="distanciaTotalClubePro">0 km</strong></div>
-                        <div><span>RITMO MÉDIO</span><strong id="ritmoMedioClubePro">—</strong></div>
-                    </div>
-                </div>
-
-                <div class="clube-pro-grade">
-                    <section id="calculadoraClubePro" class="clube-pro-cartao clube-pro-calculadora" aria-labelledby="tituloCalculadoraClubePro">
-                        <div class="clube-pro-cartao-topo">
-                            <span class="clube-pro-icone" aria-hidden="true">∑</span>
-                            <div><span>LABORATÓRIO DE RITMO</span><h3 id="tituloCalculadoraClubePro">Analise seu treino</h3></div>
-                        </div>
-                        <p>Informe a distância e o tempo para calcular parciais, velocidade e estimativas para outras distâncias.</p>
-                        <form id="formClubePro" class="clube-pro-form" onsubmit="analisarTreinoClubePro(event)">
-                            <div>
-                                <label for="distanciaClubePro">Distância <span>km</span></label>
-                                <input id="distanciaClubePro" name="distancia" type="number" min="0.1" max="100" step="0.1" value="5" required>
-                            </div>
-                            <div>
-                                <label for="minutosClubePro">Tempo <span>min</span></label>
-                                <input id="minutosClubePro" name="minutos" type="number" min="0" max="999" step="1" value="30" required>
-                            </div>
-                            <div>
-                                <label for="segundosClubePro">Segundos</label>
-                                <input id="segundosClubePro" name="segundos" type="number" min="0" max="59" step="1" value="0" required>
-                            </div>
-                            <button type="submit">Calcular análise <span aria-hidden="true">→</span></button>
-                        </form>
-                        <p id="feedbackCalculadoraClubePro" class="clube-pro-feedback" role="status" aria-live="polite"></p>
-                        <div id="resultadosClubePro" class="clube-pro-resultados" aria-live="polite">
-                            <div><span>RITMO MÉDIO</span><strong id="ritmoClubePro">6:00 /km</strong></div>
-                            <div><span>VELOCIDADE MÉDIA</span><strong id="velocidadeClubePro">10,0 km/h</strong></div>
-                            <div><span>PARCIAL DE 400 M</span><strong id="parcialClubePro">2:24</strong></div>
-                            <div><span>PROJEÇÃO 10 KM</span><strong id="projecaoClubePro">1:00:00</strong></div>
-                        </div>
-                        <button id="salvarTreinoClubePro" class="clube-pro-salvar" type="button" onclick="salvarTreinoClubePro()" disabled>Salvar no meu histórico</button>
-                    </section>
-
-                    <section class="clube-pro-cartao clube-pro-desafio" aria-labelledby="tituloDesafioClubePro">
-                        <div class="clube-pro-cartao-topo">
-                            <span class="clube-pro-icone clube-pro-icone-desafio" aria-hidden="true">⚡</span>
-                            <div><span>ESTRATÉGIA EM ETAPAS</span><h3 id="tituloDesafioClubePro">Desafio de ritmo</h3></div>
-                        </div>
-                        <p class="clube-pro-pergunta">Em uma prova de 5 km, uma atleta corre os primeiros 2 km a 6 min/km e os últimos 3 km a 5 min/km. Qual é o ritmo médio da prova?</p>
-                        <form id="formDesafioClubePro" class="clube-pro-desafio-form" onsubmit="responderDesafioClubePro(event)">
-                            <label for="respostaDesafioClubePro">Ritmo médio <span>min/km</span></label>
-                            <div>
-                                <input id="respostaDesafioClubePro" type="number" min="0" max="60" step="0.01" inputmode="decimal" placeholder="Ex.: 5,4" required>
-                                <button id="botaoDesafioClubePro" type="submit">Conferir</button>
-                            </div>
-                        </form>
-                        <p id="feedbackDesafioClubePro" class="clube-pro-feedback" role="status" aria-live="polite"></p>
-                        <p class="clube-pro-recompensa">✦ +10 pontos por acerto, uma vez por dia</p>
-                        <details class="clube-pro-formula">
-                            <summary>Ver resolução detalhada</summary>
-                            <p>(2 × 6) + (3 × 5) = 27 min</p>
-                            <p>27 ÷ 5 km = <strong>5,4 min/km</strong></p>
-                            <small>Somamos o tempo de cada trecho e dividimos pela distância total.</small>
-                        </details>
-                    </section>
-                </div>
-
-                <section class="clube-pro-historico" aria-labelledby="tituloHistoricoClubePro">
-                    <div class="clube-pro-historico-topo">
-                        <div><span>SEU PROGRESSO</span><h3 id="tituloHistoricoClubePro">Histórico de treinos</h3><p>As análises ficam salvas neste navegador e neste dispositivo.</p></div>
-                        <button id="limparHistoricoClubePro" type="button" onclick="limparHistoricoClubePro()" hidden>Limpar histórico</button>
-                    </div>
-                    <p id="mensagemHistoricoClubePro" class="clube-pro-historico-vazio">Analise e salve seu primeiro treino para começar a acompanhar os números.</p>
-                    <ol id="listaHistoricoClubePro" class="clube-pro-historico-lista"></ol>
-                </section>
-
-                <p class="clube-pro-aviso">As projeções são estimativas matemáticas baseadas no ritmo informado; o desempenho real pode variar. O Clube Pro é gratuito e não processa pagamentos.</p>
-
-            </section>
-
-
-            <!-- ============================= -->
             <!-- JOGOS -->
             <!-- ============================= -->
 
@@ -804,7 +694,7 @@
                     </h2>
 
                     <p>
-                        Três formas de treinar a matemática do 5º ao 9º ano. Qual vai ser seu próximo recorde?
+                        Quatro formas de treinar a matemática do 5º ao 9º ano. Qual vai ser seu próximo recorde?
                     </p>
 
                 </div>
@@ -891,6 +781,24 @@
 
                         <button type="button" onclick="abrirCorrida()">
                             Alinhar na largada →
+                        </button>
+
+                    </div>
+
+                    <div class="jogo-card jogo-revezamento">
+
+                        <span class="numero-desafio">04 · REVEZAMENTO</span>
+
+                        <div class="icone-jogo" aria-hidden="true">🏃‍♀️</div>
+
+                        <h3>Revezamento Matemático</h3>
+
+                        <p>Resolva seis desafios para levar sua equipe até a linha de chegada. Cada acerto vale pontos extras na sua coleção.</p>
+
+                        <span class="jogo-nivel">5º–9º ANO <span>·</span> 6 ETAPAS</span>
+
+                        <button type="button" onclick="abrirRevezamentoMatematico()">
+                            Começar revezamento →
                         </button>
 
                     </div>
@@ -1441,6 +1349,41 @@
                 <div id="fimSprint" class="desafio-fim" hidden></div>
             </div>
 
+            <div id="revezamentoMatematico" class="jogo-area desafio-area">
+                <div class="desafio-cabecalho">
+                    <div>
+                        <span class="tag-jogo tag-revezamento">🏃 REVEZAMENTO MATEMÁTICO · 5º–9º ANO</span>
+                        <h2>Revezamento Matemático</h2>
+                        <p>Resolva cada etapa para avançar. Resposta errada? Aprenda com a explicação e siga para o próximo trecho.</p>
+                    </div>
+                    <div class="desafio-placar"><span>PONTOS</span><strong id="pontosRevezamento">0 pts</strong></div>
+                </div>
+                <div class="revezamento-progresso">
+                    <div class="revezamento-progresso-legenda">
+                        <span id="etapaRevezamento">ETAPA 1 DE 6</span>
+                        <span id="sequenciaRevezamento">SEQUÊNCIA 0</span>
+                    </div>
+                    <div
+                        class="desafio-trilho revezamento-trilho"
+                        role="progressbar"
+                        aria-label="Progresso do revezamento"
+                        aria-valuemin="0"
+                        aria-valuemax="6"
+                        aria-valuenow="0"
+                        aria-valuetext="0 de 6 etapas"
+                    >
+                        <span id="barraRevezamento"></span>
+                    </div>
+                    <div class="revezamento-corredor" aria-hidden="true"><span id="iconeCorredorRevezamento">🏃‍♀️</span></div>
+                </div>
+                <div class="desafio-pergunta">
+                    <span id="temaRevezamento" class="desafio-tema"></span>
+                    <p id="perguntaRevezamento" aria-live="polite"></p>
+                </div>
+                <div id="respostasRevezamento" class="desafio-respostas" role="group" aria-label="Escolha a resposta do desafio"></div>
+                <p id="feedbackRevezamento" class="desafio-feedback" role="status" aria-live="polite"></p>
+                <div id="fimRevezamento" class="desafio-fim" hidden></div>
+            </div>
 
             <!-- CORRIDA DE RUA -->
 
