@@ -5,7 +5,7 @@ set "PHP_EXE="
 
 where php >nul 2>nul
 if not errorlevel 1 set "PHP_EXE=php"
-if not defined PHP_EXE for /d %%D in ("%SITE_DIR%..\..\..\bin\php\php-*") do if not defined PHP_EXE if exist "%%~fD\php.exe" set "PHP_EXE=%%~fD\php.exe"
+if not defined PHP_EXE for /d %%D in ("%SITE_DIR%..\..\bin\php\php-*") do if not defined PHP_EXE if exist "%%~fD\php.exe" set "PHP_EXE=%%~fD\php.exe"
 
 if not defined PHP_EXE (
     echo O PHP nao foi encontrado. Inicie o Apache pelo Laragon ou adicione o PHP ao PATH.
