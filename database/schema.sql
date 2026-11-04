@@ -17,6 +17,20 @@ CREATE TABLE IF NOT EXISTS users (
     KEY users_ranking (points, name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS running_challenges (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
+    run_date DATE NOT NULL,
+    distance_meters SMALLINT UNSIGNED NOT NULL DEFAULT 1000,
+    completed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY running_challenges_user_day (user_id, run_date),
+    KEY running_challenges_date (run_date),
+    CONSTRAINT running_challenges_user_fk
+        FOREIGN KEY (user_id) REFERENCES users (id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS user_state (
     user_id BIGINT UNSIGNED NOT NULL,
     state_key VARCHAR(120) NOT NULL,

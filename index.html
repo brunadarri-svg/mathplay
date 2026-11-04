@@ -31,7 +31,7 @@
         <span>9</span>
         <span>∞</span>
         <span>2</span>
-        <span>★</span>
+        <span>π</span>
         <span>5</span>
     </div>
 
@@ -116,7 +116,7 @@
 
                         <div class="input-container">
 
-                            <span>✉️</span>
+                            <span aria-hidden="true">@</span>
 
                             <input
                                 type="email"
@@ -152,7 +152,7 @@
 
                         <div class="input-container">
 
-                            <span>🔒</span>
+                            <span aria-hidden="true">•</span>
 
                             <input
                                 type="password"
@@ -178,7 +178,7 @@
                     <div class="campo">
                         <label for="tipoContaCadastro">Vou entrar como</label>
                         <div class="input-container">
-                            <span aria-hidden="true">👤</span>
+                            <span aria-hidden="true">AL</span>
                             <select id="tipoContaCadastro" name="tipoConta" required>
                                 <option value="aluno">Aluno</option>
                                 <option value="professor">Professor</option>
@@ -205,7 +205,7 @@
                     <div class="campo">
                         <label for="emailCadastro">E-mail</label>
                         <div class="input-container">
-                            <span aria-hidden="true">✉</span>
+                            <span aria-hidden="true">@</span>
                             <input
                                 type="email"
                                 id="emailCadastro"
@@ -492,7 +492,7 @@
                     <div class="hero-texto">
 
                         <span class="badge">
-                            🏁 SEU PRÓXIMO DESAFIO COMEÇA AQUI
+                            SEU PRÓXIMO DESAFIO COMEÇA AQUI
                         </span>
 
                         <h2>
@@ -512,7 +512,7 @@
                                 onclick="irPara('jogos')"
                                 class="botao-principal"
                             >
-                                🏁 Escolher meu circuito
+                                Escolher meu circuito
                             </button>
 
                             <button
@@ -520,7 +520,7 @@
                                 onclick="irPara('videos')"
                                 class="botao-secundario"
                             >
-                                📚 Explorar videoaulas
+                                Explorar videoaulas
                             </button>
 
                         </div>
@@ -559,7 +559,7 @@
                     <div class="recurso-card rosa">
 
                         <div class="icone-recurso">
-                            🎮
+                            01
                         </div>
 
                         <h3>Treinos de pista</h3>
@@ -581,7 +581,7 @@
                     <div class="recurso-card amarelo">
 
                         <div class="icone-recurso">
-                            🎬
+                            02
                         </div>
 
                         <h3>Reels da pista</h3>
@@ -603,7 +603,7 @@
                     <div class="recurso-card verde">
 
                         <div class="icone-recurso">
-                            🏆
+                            03
                         </div>
 
                         <h3>Seu ritmo. Seu recorde.</h3>
@@ -680,6 +680,24 @@
                             <p id="feedbackDesafioDiario" class="feedback-desafio-diario" role="status" aria-live="polite"></p>
                             <div class="desafio-recompensa-diaria"><span aria-hidden="true">✦</span> +10 pontos por acerto</div>
                         </section>
+
+                        <section class="desafio-corrida-diaria" aria-labelledby="tituloDesafioCorrida">
+                            <div class="pit-stop-cartao-topo">
+                                <span class="pit-stop-icone desafio-corrida-icone" aria-hidden="true">1K</span>
+                                <span>DESAFIO DE CORRIDA</span>
+                                <time id="dataDesafioCorrida"></time>
+                            </div>
+                            <h3 id="tituloDesafioCorrida">Um quilômetro por dia</h3>
+                            <p class="desafio-corrida-descricao">Corra 1 km no seu ritmo. Registre a conclusão para acompanhar sua consistência.</p>
+                            <div class="desafio-corrida-metricas" aria-live="polite">
+                                <div><strong id="sequenciaCorrida">0</strong><span>dias seguidos</span></div>
+                                <div><strong id="diasCorridaTotal">0</strong><span>corridas registradas</span></div>
+                            </div>
+                            <p class="desafio-corrida-recompensa">20 pontos por conclusão diária</p>
+                            <button id="botaoDesafioCorrida" class="botao-desafio-corrida" type="button" onclick="registrarCorridaDiaria()">Registrar meu 1 km</button>
+                            <p id="feedbackDesafioCorrida" class="feedback-desafio-corrida" role="status" aria-live="polite">Entre na sua conta para acompanhar o desafio.</p>
+                            <p class="desafio-corrida-nota">Registro pessoal; a distância não é verificada por GPS.</p>
+                        </section>
                     </div>
                 </section>
 
@@ -694,7 +712,7 @@
 
                 <div class="titulo-secao">
 
-                    <span>🏁</span>
+                    <span>04</span>
 
                     <h2>
                         Escolha sua modalidade
@@ -717,7 +735,7 @@
                         </span>
 
                         <div class="icone-jogo" aria-hidden="true">
-                            📐
+                            ÷
                         </div>
 
                         <h3>
@@ -748,7 +766,7 @@
                         </span>
 
                         <div class="icone-jogo" aria-hidden="true">
-                            ⚡
+                            ×
                         </div>
 
                         <h3>
@@ -778,7 +796,7 @@
 
                         <span class="numero-desafio">03 · HABILIDADE</span>
 
-                        <div class="icone-jogo" aria-hidden="true">🏃</div>
+                        <div class="icone-jogo" aria-hidden="true">1K</div>
 
                         <h3>Corrida de Rua</h3>
 
@@ -796,7 +814,7 @@
 
                         <span class="numero-desafio">04 · REVEZAMENTO</span>
 
-                        <div class="icone-jogo" aria-hidden="true">🏃‍♀️</div>
+                        <div class="icone-jogo" aria-hidden="true">KM</div>
 
                         <h3>Revezamento Matemático</h3>
 
@@ -868,15 +886,15 @@
             <section id="ranking" class="tela">
 
                 <div class="titulo-secao">
-                    <span>🏆</span>
-                    <h2>Ranking Mente Turbo</h2>
-                    <p>Veja quem acumulou mais pontos neste dispositivo.</p>
+                    <span>06</span>
+                    <h2>Classificação geral</h2>
+                    <p>Alunos classificados por pontos, com corridas e quilômetros registrados.</p>
                 </div>
 
                 <div id="podioRanking" class="podio-ranking" aria-label="Pódio dos três primeiros jogadores"></div>
 
                 <div id="demaisRanking" class="demais-ranking">
-                    <h3>Classificação geral</h3>
+                    <h3>Demais alunos</h3>
                     <ol id="listaRanking"></ol>
                 </div>
 
@@ -884,7 +902,7 @@
 
             <section id="atividadesAluno" class="tela">
                 <div class="titulo-secao">
-                    <span aria-hidden="true">📘</span>
+                    <span aria-hidden="true">AT</span>
                     <h2>Atividades da turma</h2>
                     <p>Resolva os exercícios enviados pelo seu professor.</p>
                 </div>
@@ -894,7 +912,7 @@
 
             <section id="professor" class="tela">
                 <div class="titulo-secao">
-                    <span aria-hidden="true">🧑‍🏫</span>
+                    <span aria-hidden="true">PR</span>
                     <h2>Área do professor</h2>
                     <p>Crie exercícios de matemática e acompanhe a conclusão dos alunos.</p>
                 </div>
@@ -926,7 +944,7 @@
 
             <section id="reels" class="tela reels-tela">
                 <div class="titulo-secao reels-intro">
-                    <span aria-hidden="true">🎬</span>
+                    <span aria-hidden="true">REELS</span>
                     <h2>Reels da pista</h2>
                     <p>Assista aos Reels e resolva os desafios. Use os botões para avançar e conferir cada solução.</p>
                 </div>
@@ -939,7 +957,7 @@
                         <p class="reel-mensagem-video" role="status" aria-live="polite" hidden></p>
                         <div class="reel-sombra"></div>
                         <p class="reel-legenda-visual">Descrição do vídeo: atleta corre na pista. Desafio escrito: três voltas de 400 metros.</p>
-                        <span class="reel-etiqueta">🏃 CORRIDA + MATEMÁTICA</span>
+                        <span class="reel-etiqueta">CORRIDA + MATEMÁTICA</span>
                         <div class="reel-conteudo">
                             <span class="reel-tema">DESAFIO 01 · DISTÂNCIA</span>
                             <h3>Três voltas de 400 m. Quantos metros você correu?</h3>
@@ -947,7 +965,7 @@
                             <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel1" onclick="alternarRespostaReel(this)">Ver solução</button>
                         </div>
                         <div class="reel-acoes" aria-label="Ações do reel">
-                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="128" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>128</small></button>
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="128" onclick="curtirReel(this)"><span aria-hidden="true">+</span><small>128</small></button>
                             <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
                             <button class="reel-acao" type="button" aria-label="Próximo vídeo" onclick="moverReel(this, 1)"><span aria-hidden="true">⌄</span><small>Próximo</small></button>
                         </div>
@@ -961,7 +979,7 @@
                         <p class="reel-mensagem-video" role="status" aria-live="polite" hidden></p>
                         <div class="reel-sombra"></div>
                         <p class="reel-legenda-visual">Descrição do vídeo: corredor passa pela pista, em cena sem fala. Desafio escrito sobre ritmo médio.</p>
-                        <span class="reel-etiqueta">⚡ SPRINT MENTAL</span>
+                        <span class="reel-etiqueta">SPRINT MENTAL</span>
                         <div class="reel-conteudo">
                             <span class="reel-tema">DESAFIO 02 · RITMO</span>
                             <h3>2,4 km em 12 minutos. Qual foi a velocidade média, em metros por minuto?</h3>
@@ -969,7 +987,7 @@
                             <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel2" onclick="alternarRespostaReel(this)">Ver solução</button>
                         </div>
                         <div class="reel-acoes" aria-label="Ações do reel">
-                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="96" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>96</small></button>
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="96" onclick="curtirReel(this)"><span aria-hidden="true">+</span><small>96</small></button>
                             <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
                             <button class="reel-acao" type="button" aria-label="Próximo vídeo" onclick="moverReel(this, 1)"><span aria-hidden="true">⌄</span><small>Próximo</small></button>
                         </div>
@@ -983,7 +1001,7 @@
                         <p class="reel-mensagem-video" role="status" aria-live="polite" hidden></p>
                         <div class="reel-sombra"></div>
                         <p class="reel-legenda-visual">Descrição do vídeo: corrida em pista ao ar livre, sem fala. Desafio escrito de porcentagem.</p>
-                        <span class="reel-etiqueta">📐 DESAFIO DA PISTA</span>
+                        <span class="reel-etiqueta">DESAFIO DA PISTA</span>
                         <div class="reel-conteudo">
                             <span class="reel-tema">DESAFIO 03 · PORCENTAGEM</span>
                             <h3>Você já correu 800 m de uma prova de 2 km. Quantos por cento completou?</h3>
@@ -991,7 +1009,7 @@
                             <button class="reel-solucao" type="button" aria-expanded="false" aria-controls="respostaReel3" onclick="alternarRespostaReel(this)">Ver solução</button>
                         </div>
                         <div class="reel-acoes" aria-label="Ações do reel">
-                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="74" onclick="curtirReel(this)"><span aria-hidden="true">♡</span><small>74</small></button>
+                            <button class="reel-acao" type="button" aria-label="Curtir reel" aria-pressed="false" data-curtidas="74" onclick="curtirReel(this)"><span aria-hidden="true">+</span><small>74</small></button>
                             <button class="reel-acao" type="button" aria-label="Reproduzir vídeo" data-reel-play onclick="alternarVideoReel(this)"><span aria-hidden="true">▶</span><small>Assistir</small></button>
                             <button class="reel-acao" type="button" aria-label="Vídeo anterior" onclick="moverReel(this, -1)"><span aria-hidden="true">⌃</span><small>Anterior</small></button>
                         </div>
@@ -1010,7 +1028,7 @@
                 <section class="instagram-perfil" aria-label="Perfil do Clube de Corrida Mente Turbo">
                     <div class="instagram-capa">
                         <span>CORRA · PENSE · AVANCE</span>
-                        <span aria-hidden="true">🏁</span>
+                        <span aria-hidden="true">MT</span>
                     </div>
                     <div class="instagram-perfil-info">
                         <div class="instagram-avatar">
@@ -1051,7 +1069,7 @@
                             <small>Desafios</small>
                         </button>
                         <button type="button" onclick="irPara('recompensas')">
-                            <span class="story-anel story-conquistas"><span>★</span></span>
+                            <span class="story-anel story-conquistas"><span>MT</span></span>
                             <small>Medalhas</small>
                         </button>
                         <button type="button" onclick="irPara('videos')">
@@ -1118,7 +1136,7 @@
 
                 <div class="titulo-secao">
 
-                    <span>🎥</span>
+                    <span>VIDEOAULAS</span>
 
                     <h2>Videoaulas de matemática</h2>
 
@@ -1134,7 +1152,7 @@
 
                     <div class="video-card rosa-claro">
 
-                        <div>➕</div>
+                        <div>+</div>
 
                         <h3>
                             Frações e decimais
@@ -1156,7 +1174,7 @@
 
                     <div class="video-card amarelo-claro">
 
-                        <div>➖</div>
+                        <div>−</div>
 
                         <h3>
                             Porcentagem
@@ -1178,7 +1196,7 @@
 
                     <div class="video-card verde-claro">
 
-                        <div>✖️</div>
+                        <div>×</div>
 
                         <h3>
                             Proporção e razão
@@ -1200,7 +1218,7 @@
 
                     <div class="video-card laranja-claro">
 
-                        <div>➗</div>
+                        <div>÷</div>
 
                         <h3>
                             Medidas e conversões
@@ -1222,7 +1240,7 @@
 
                     <div class="video-card roxo-claro">
 
-                        <div>🍕</div>
+                        <div>3/4</div>
 
                         <h3>
                             Geometria da pista
@@ -1244,7 +1262,7 @@
 
                     <div class="video-card rosa-claro">
 
-                        <div>💯</div>
+                        <div>100%</div>
 
                         <h3>
                             Expressões e equações
@@ -1315,7 +1333,7 @@
             <div id="estrategia" class="jogo-area desafio-area">
                 <div class="desafio-cabecalho">
                     <div>
-                        <span class="tag-jogo">📐 CIRCUITO DE ESTRATÉGIA · 5º–9º ANO</span>
+                        <span class="tag-jogo">CIRCUITO DE ESTRATÉGIA · 5º–9º ANO</span>
                         <h2>Desafio de Estratégia</h2>
                         <p>Leia com atenção. Cada desafio exige raciocínio em várias etapas.</p>
                     </div>
@@ -1337,7 +1355,7 @@
             <div id="sprintMental" class="jogo-area desafio-area">
                 <div class="desafio-cabecalho">
                     <div>
-                        <span class="tag-jogo tag-sprint">⚡ SPRINT MENTAL · 5º–9º ANO</span>
+                        <span class="tag-jogo tag-sprint">SPRINT MENTAL · 5º–9º ANO</span>
                         <h2>Sprint Mental</h2>
                         <p>Resolva o máximo que conseguir antes da bandeirada.</p>
                     </div>
@@ -1368,7 +1386,7 @@
             <div id="revezamentoMatematico" class="jogo-area desafio-area">
                 <div class="desafio-cabecalho">
                     <div>
-                        <span class="tag-jogo tag-revezamento">🏃 REVEZAMENTO MATEMÁTICO · 5º–9º ANO</span>
+                        <span class="tag-jogo tag-revezamento">REVEZAMENTO MATEMÁTICO · 5º–9º ANO</span>
                         <h2>Revezamento Matemático</h2>
                         <p>Resolva cada etapa para avançar. Resposta errada? Aprenda com a explicação e siga para o próximo trecho.</p>
                     </div>
@@ -1390,7 +1408,7 @@
                     >
                         <span id="barraRevezamento"></span>
                     </div>
-                    <div class="revezamento-corredor" aria-hidden="true"><span id="iconeCorredorRevezamento">🏃‍♀️</span></div>
+                    <div class="revezamento-corredor" aria-hidden="true"><span id="iconeCorredorRevezamento">KM</span></div>
                 </div>
                 <div class="desafio-pergunta">
                     <span id="temaRevezamento" class="desafio-tema"></span>
@@ -1407,7 +1425,7 @@
 
                 <div class="corrida-topo">
                     <div>
-                        <span class="tag-jogo">🏁 DESAFIO DE RUA · INICIANTE</span>
+                        <span class="tag-jogo">DESAFIO DE RUA · INICIANTE</span>
                         <h2>Corrida de estreia</h2>
                         <p>400 m de ritmo leve. Encontre seu caminho, sem pressa.</p>
                     </div>

@@ -679,6 +679,10 @@ function irPara(tela) {
             atualizarRanking();
         }
 
+        if (tela === "inicio") {
+            carregarDesafioCorridaDiaria();
+        }
+
         if (tela === "recompensas") {
             atualizarRecompensas();
         }
@@ -1041,7 +1045,7 @@ function curtirReel(botao) {
     const total = totalBase + (curtido ? -1 : 1);
 
     botao.setAttribute("aria-pressed", String(!curtido));
-    botao.querySelector("span").textContent = curtido ? "♡" : "♥";
+    botao.querySelector("span").textContent = curtido ? "✓" : "+";
     botao.querySelector("small").textContent = String(total);
 }
 
@@ -1221,6 +1225,74 @@ function iniciarPitStopMatematico() {
     }
 }
 
+function atualizarResumoCorridaDiaria(resumo) {
+    const botao = document.getElementById("botaoDesafioCorrida");
+    const feedback = document.getElementById("feedbackDesafioCorrida");
+
+    document.getElementById("diasCorridaTotal").textContent = String(resumo.totalDias);
+    document.getElementById("sequenciaCorrida").textContent = String(resumo.sequenciaDias);
+    botao.disabled = resumo.concluidoHoje;
+    botao.textContent = resumo.concluidoHoje ? "Desafio concluído" : "Registrar meu 1 km";
+
+    if (resumo.concluidoHoje) {
+        feedback.textContent = "Seu quilômetro de hoje já está registrado. Volte amanhã para manter a sequência.";
+        feedback.classList.add("correto");
+    } else {
+        feedback.textContent = "Quando concluir a corrida, registre aqui para atualizar seu histórico.";
+        feedback.classList.remove("correto");
+    }
+}
+
+async function carregarDesafioCorridaDiaria() {
+    if (localStorage.getItem("mathzoneTipoConta") !== "aluno") {
+        return;
+    }
+
+    try {
+        const resposta = await solicitarApiMathZone("running:status", null, "GET");
+        atualizarResumoCorridaDiaria(resposta.desafio);
+        document.getElementById("dataDesafioCorrida").textContent =
+            new Date(resposta.hoje + "T12:00:00").toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "short"
+            });
+    } catch (erro) {
+        console.error("Não foi possível carregar o desafio diário de corrida.", erro);
+        document.getElementById("feedbackDesafioCorrida").textContent =
+            "Não foi possível carregar seu progresso. Atualize a página e tente novamente.";
+        document.getElementById("feedbackDesafioCorrida").classList.add("incorreto");
+    }
+}
+
+async function registrarCorridaDiaria() {
+    const botao = document.getElementById("botaoDesafioCorrida");
+    const feedback = document.getElementById("feedbackDesafioCorrida");
+    botao.disabled = true;
+    feedback.classList.remove("correto", "incorreto");
+    feedback.textContent = "Registrando seu desafio...";
+
+    try {
+        const resposta = await solicitarApiMathZone("running:complete", {});
+        atualizarResumoCorridaDiaria(resposta.desafio);
+        if (resposta.registradoAgora) {
+            registrarPontosTreino(resposta.pontosRecebidos);
+        }
+        feedback.textContent = resposta.registradoAgora
+            ? "Quilômetro registrado. Você ganhou 20 pontos e atualizou sua classificação."
+            : "Seu quilômetro de hoje já estava registrado. Nenhum ponto foi adicionado novamente.";
+        feedback.classList.add("correto");
+        if (document.getElementById("ranking").classList.contains("ativa")) {
+            await atualizarRanking();
+        }
+    } catch (erro) {
+        console.error("Não foi possível registrar o desafio diário de corrida.", erro);
+        feedback.textContent = erro.message || "Não foi possível registrar o desafio. Tente novamente.";
+        feedback.classList.add("incorreto");
+        botao.disabled = false;
+        mostrarErroBancoMathZone("Não foi possível salvar seu quilômetro no banco de dados.");
+    }
+}
+
 function responderDesafioDiario(event) {
     event.preventDefault();
 
@@ -1273,7 +1345,7 @@ const publicacoesBaseComunidade = [
         imagem: "./assets/tenis/meninas-correndo-pista.jpg",
         alt: "Atletas correndo juntas em uma pista",
         curtidas: 1284,
-        descricao: "Desafio do dia: 3 voltas de 400 m. Quantos metros você percorre? A pista também é lugar de fazer contas! 🏃‍♀️🧮"
+        descricao: "Desafio do dia: 3 voltas de 400 m. Quantos metros você percorre? A pista também é lugar de fazer contas."
     },
     {
         id: "ritmo-constante",
@@ -1281,7 +1353,7 @@ const publicacoesBaseComunidade = [
         imagem: "./assets/tenis/adidas-adios-pro-4.jpg",
         alt: "Tênis Adidas Adios Pro 4 para corrida",
         curtidas: 968,
-        descricao: "Cada treino tem seu ritmo. Se você corre 2,4 km em 12 minutos, qual é a sua média em metros por minuto? Deixe a resposta nos comentários. ⚡"
+        descricao: "Cada treino tem seu ritmo. Se você corre 2,4 km em 12 minutos, qual é a sua média em metros por minuto? Deixe a resposta nos comentários."
     },
     {
         id: "porcentagem-na-pista",
@@ -1289,7 +1361,7 @@ const publicacoesBaseComunidade = [
         imagem: "./assets/tenis/olympikus-corre-4.jpg",
         alt: "Tênis Olympikus Corre 4 para corrida",
         curtidas: 742,
-        descricao: "Uma prova tem 2 km e você já completou 800 m. Que porcentagem do percurso ficou para trás? Resolva, curta e compartilhe seu raciocínio. 📐"
+        descricao: "Uma prova tem 2 km e você já completou 800 m. Que porcentagem do percurso ficou para trás? Resolva, curta e compartilhe seu raciocínio."
     }
 ];
 
@@ -1425,7 +1497,7 @@ function montarPostComunidade(postagem) {
     } else {
         midia.classList.add("instagram-post-midia-texto");
         const selo = document.createElement("span");
-        selo.textContent = "🏁 MENTE TURBO · CORRIDA + MATEMÁTICA";
+        selo.textContent = "MENTE TURBO · CORRIDA + MATEMÁTICA";
         const texto = document.createElement("strong");
         texto.textContent = "Uma ideia nova na pista";
         midia.append(selo, texto);
@@ -1443,7 +1515,7 @@ function montarPostComunidade(postagem) {
     botaoCurtir.setAttribute("aria-label", curtido ? "Descurtir publicação" : "Curtir publicação");
     const iconeCurtir = document.createElement("span");
     iconeCurtir.setAttribute("aria-hidden", "true");
-    iconeCurtir.textContent = curtido ? "♥" : "♡";
+    iconeCurtir.textContent = curtido ? "✓" : "+";
     botaoCurtir.append(iconeCurtir, document.createTextNode(curtido ? " Curtido" : " Curtir"));
     botaoCurtir.addEventListener("click", function() {
         if (curtido) {
@@ -1729,9 +1801,17 @@ function publicarNaComunidade(event) {
 async function obterRanking() {
     const resposta = await solicitarApiMathZone("ranking", null, "GET");
     return resposta.ranking.filter(function(jogador) {
-        return jogador && typeof jogador.email === "string" && Number.isFinite(Number(jogador.pontos));
+        return jogador && typeof jogador.nome === "string" &&
+            Number.isFinite(Number(jogador.pontos)) &&
+            Number.isFinite(Number(jogador.kmCorridos)) &&
+            Number.isFinite(Number(jogador.diasCorridos));
     }).map(function(jogador) {
-        return { email: jogador.email, pontos: Number(jogador.pontos) };
+        return {
+            nome: jogador.nome,
+            pontos: Number(jogador.pontos),
+            kmCorridos: Number(jogador.kmCorridos),
+            diasCorridos: Number(jogador.diasCorridos)
+        };
     });
 }
 
@@ -1763,15 +1843,19 @@ function criarItemPodio(jogador, posicao) {
 
     const medalha = document.createElement("span");
     medalha.className = "medalha-ranking";
-    medalha.textContent = posicao === "primeiro" ? "🥇" : posicao === "segundo" ? "🥈" : "🥉";
+    medalha.textContent = posicao === "primeiro" ? "01" : posicao === "segundo" ? "02" : "03";
 
     const nome = document.createElement("strong");
-    nome.textContent = jogador.email.split("@")[0];
+    nome.textContent = jogador.nome;
 
     const pontos = document.createElement("span");
     pontos.textContent = jogador.pontos + " pontos";
 
-    item.append(medalha, nome, pontos);
+    const corridas = document.createElement("small");
+    corridas.textContent = jogador.kmCorridos.toLocaleString("pt-BR") + " km · " +
+        jogador.diasCorridos + (jogador.diasCorridos === 1 ? " dia" : " dias");
+
+    item.append(medalha, nome, pontos, corridas);
     return item;
 
 }
@@ -1814,10 +1898,11 @@ async function atualizarRanking() {
     ranking.slice(3).forEach(function(jogador, indice) {
         const item = document.createElement("li");
         const nome = document.createElement("strong");
-        nome.textContent = (indice + 4) + ". " + jogador.email.split("@")[0];
+        nome.textContent = (indice + 4) + ". " + jogador.nome;
 
         const pontos = document.createElement("span");
-        pontos.textContent = jogador.pontos + " pontos";
+        pontos.textContent = jogador.pontos + " pts · " +
+            jogador.kmCorridos.toLocaleString("pt-BR") + " km";
 
         item.append(nome, pontos);
         lista.appendChild(item);
@@ -2349,7 +2434,7 @@ function responderEstrategia(resposta) {
         sequenciaEstrategia++;
         const ganho = 10 + (sequenciaEstrategia > 1 ? 5 : 0);
         pontosEstrategia += ganho;
-        feedback.textContent = "🏁 Certo! +" + ganho + " pts. " + problema.explicacao;
+        feedback.textContent = "Certo! +" + ganho + " pts. " + problema.explicacao;
         feedback.classList.add("feedback-correto");
         registrarPontuacao(ganho);
         registrarPontosTreino(ganho);
@@ -2375,7 +2460,7 @@ function finalizarEstrategia() {
     document.getElementById("feedbackEstrategia").textContent = "";
     mostrarFimDesafio(
         document.getElementById("fimEstrategia"),
-        "🏆 Circuito concluído!",
+        "Circuito concluído!",
         "Você terminou as 8 etapas e somou " + pontosEstrategia + " pontos. Cada problema resolvido fortalece sua estratégia.",
         abrirEstrategia
     );
@@ -2515,7 +2600,7 @@ function responderRevezamento(resposta) {
         sequenciaRevezamento++;
         const ganho = 20 + (sequenciaRevezamento > 1 ? 5 : 0);
         pontosRevezamento += ganho;
-        feedback.textContent = "🏁 Acertou! +" + ganho + " pontos. " + problema.explicacao;
+        feedback.textContent = "Acertou! +" + ganho + " pontos. " + problema.explicacao;
         feedback.classList.add("feedback-correto");
         registrarPontuacao(ganho);
         registrarPontosTreino(ganho);
@@ -2552,7 +2637,7 @@ function finalizarRevezamento() {
 
     mostrarFimDesafio(
         document.getElementById("fimRevezamento"),
-        aproveitamento === 100 ? "🏆 Revezamento perfeito!" : "🏁 Revezamento concluído!",
+        aproveitamento === 100 ? "Revezamento perfeito!" : "Revezamento concluído!",
         "Você acertou " + acertosRevezamento + " de " + totalEtapas +
             " etapas (" + aproveitamento + "%) e conquistou " + pontosRevezamento +
             " pontos. " + (acertosRevezamento === totalEtapas
@@ -2636,7 +2721,7 @@ function responderSprintMental(event) {
         sequenciaSprint++;
         const ganho = 15 + (sequenciaSprint > 1 ? 5 : 0);
         pontosSprint += ganho;
-        feedback.textContent = "⚡ Na mosca! +" + ganho + " pts. " + problema.explicacao;
+        feedback.textContent = "Na mosca! +" + ganho + " pts. " + problema.explicacao;
         feedback.classList.add("feedback-correto");
         registrarPontuacao(ganho);
         registrarPontosTreino(ganho);
@@ -2672,7 +2757,7 @@ function finalizarSprintMental() {
     document.querySelector(".sprint-tempo").classList.remove("sprint-tempo-alerta");
     mostrarFimDesafio(
         document.getElementById("fimSprint"),
-        tempoSprint > 0 ? "🏁 Linha de chegada!" : "⏱ Tempo encerrado!",
+        tempoSprint > 0 ? "Linha de chegada!" : "Tempo encerrado!",
         "Você marcou " + pontosSprint + " pontos, acertou " + acertosSprint + " de " + totalRespondido + " desafios e terminou com " + tempoSprint + " segundos no relógio.",
         abrirSprintMental
     );

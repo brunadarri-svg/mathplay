@@ -4792,12 +4792,13 @@ body.movimento-reduzido .hero-video-fundo {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 0.9fr));
     gap: 18px;
 }
 
 .ritmo-calculadora,
-.desafio-diario {
+.desafio-diario,
+.desafio-corrida-diaria {
     min-width: 0;
     padding: clamp(19px, 3vw, 28px);
     border: 1px solid rgba(255,255,255,0.09);
@@ -4808,6 +4809,12 @@ body.movimento-reduzido .hero-video-fundo {
 .desafio-diario {
     background:
         radial-gradient(ellipse at 100% 0, rgba(216,243,106,0.09), transparent 48%),
+        rgba(255,255,255,0.045);
+}
+
+.desafio-corrida-diaria {
+    background:
+        radial-gradient(ellipse at 100% 0, rgba(130,207,255,0.1), transparent 48%),
         rgba(255,255,255,0.045);
 }
 
@@ -5046,6 +5053,109 @@ body.movimento-reduzido .hero-video-fundo {
 .desafio-recompensa-diaria span {
     color: #d8f36a;
     font-size: 16px;
+}
+
+.desafio-corrida-icone {
+    background: rgba(130,207,255,0.12);
+    color: #82cfff;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.desafio-corrida-diaria h3 {
+    margin-bottom: 7px;
+    color: #f5f8f7;
+    font-size: 22px;
+}
+
+.desafio-corrida-descricao {
+    min-height: 60px;
+    margin-bottom: 18px;
+    color: #a8bdc3;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.desafio-corrida-metricas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.desafio-corrida-metricas > div {
+    display: grid;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 12px;
+    background: rgba(4,17,24,0.28);
+}
+
+.desafio-corrida-metricas strong {
+    color: #e1f889;
+    font-size: 22px;
+}
+
+.desafio-corrida-metricas span {
+    color: #a8bdc3;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.desafio-corrida-recompensa {
+    margin-bottom: 10px;
+    color: #d8f36a;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.botao-desafio-corrida {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 11px;
+    background: #d8f36a;
+    color: #102b3f;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.botao-desafio-corrida:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: #e6ff87;
+}
+
+.botao-desafio-corrida:disabled {
+    cursor: default;
+    opacity: 0.72;
+}
+
+.feedback-desafio-corrida {
+    min-height: 42px;
+    margin-top: 11px;
+    color: #a8bdc3;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.feedback-desafio-corrida.correto {
+    color: #d8f36a;
+}
+
+.feedback-desafio-corrida.incorreto {
+    color: #ffb29e;
+}
+
+.desafio-corrida-nota {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.09);
+    color: #8fa6ad;
+    font-size: 10px;
+    line-height: 1.5;
 }
 
 @media (max-width: 800px) {
@@ -5584,24 +5694,24 @@ footer {
 
 :root {
     --pista-noite: #102b3f;
-    --pista-verde: #146b53;
-    --pista-lima: #d8f36a;
-    --pista-laranja: #ff784f;
-    --pista-ceu: #e8f5f3;
-    --pista-tinta: #18374a;
-    --pista-muted: #647987;
-    --pista-linha: #dce8e8;
+    --pista-verde: #14765c;
+    --pista-lima: #d7f07b;
+    --pista-laranja: #f47e59;
+    --pista-ceu: #e8f4f2;
+    --pista-tinta: #193847;
+    --pista-muted: #687d87;
+    --pista-linha: #d9e7e5;
     --pista-sombra: 0 18px 42px rgba(16, 43, 63, 0.09);
 }
 
 body {
     color: var(--pista-tinta);
-    background: #f4f8f7;
+    background: #f3f7f6;
 }
 
 .tela-login {
     min-height: 100svh;
-    background: #f4f8f7;
+    background: #f3f7f6;
 }
 
 .login-esquerda {
@@ -5609,7 +5719,8 @@ body {
     width: 52%;
     padding: clamp(30px, 5vw, 72px);
     background:
-        radial-gradient(ellipse at 82% 14%, rgba(216,243,106,0.2), transparent 30%),
+        radial-gradient(ellipse at 82% 14%, rgba(215,240,123,0.2), transparent 30%),
+        radial-gradient(ellipse at 10% 88%, rgba(244,126,89,0.12), transparent 32%),
         repeating-linear-gradient(118deg, transparent 0 78px, rgba(255,255,255,0.035) 79px 81px, transparent 82px 156px),
         linear-gradient(145deg, #102b3f 4%, #145944 72%, #16775a);
 }
@@ -5653,9 +5764,10 @@ body {
 }
 
 .login-corrida-imagem {
-    height: clamp(150px, 20vh, 220px);
-    border-color: rgba(255,255,255,0.2);
-    border-radius: 20px;
+    height: clamp(170px, 22vh, 245px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(4,23,29,0.2);
 }
 
 .login-corrida-imagem figcaption {
@@ -5666,8 +5778,9 @@ body {
     width: 48%;
     padding: clamp(24px, 5vw, 64px);
     background:
-        radial-gradient(ellipse at 100% 0%, rgba(216,243,106,0.18), transparent 34%),
-        #f4f8f7;
+        radial-gradient(ellipse at 100% 0%, rgba(215,240,123,0.2), transparent 34%),
+        radial-gradient(circle at 1px 1px, rgba(16,43,63,0.035) 1px, transparent 1.5px) 0 0 / 22px 22px,
+        #f3f7f6;
 }
 
 .login-card {
@@ -5762,7 +5875,18 @@ body {
 }
 
 .novo-usuario button {
-    color: var(--pista-verde);
+    padding: 11px 20px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--pista-verde);
+    color: #fff;
+    font-weight: 800;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.novo-usuario button:hover {
+    transform: translateY(-2px);
+    background: #105f4a;
 }
 
 .linha-ou {
@@ -5836,7 +5960,15 @@ body {
     padding: clamp(28px, 5vw, 64px);
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 27px;
+    background:
+        linear-gradient(90deg, rgba(9,31,44,0.94) 0%, rgba(13,62,54,0.8) 52%, rgba(15,81,62,0.45) 100%),
+        url("./assets/tenis/meninas-correndo-pista.jpg") center 43% / cover no-repeat;
     box-shadow: 0 26px 62px rgba(3,18,27,0.24);
+}
+
+.hero-video-fundo {
+    opacity: 0.18;
+    filter: brightness(0.62) saturate(0.78);
 }
 
 .hero h2 {
@@ -5880,10 +6012,33 @@ body {
     box-shadow: 0 12px 30px rgba(16,43,63,0.07);
 }
 
-.recurso-card.rosa,
-.recurso-card.amarelo,
-.recurso-card.verde {
+.recurso-card.rosa {
     border-top-color: var(--pista-verde);
+}
+
+.recurso-card.amarelo {
+    border-top-color: var(--pista-laranja);
+}
+
+.recurso-card.verde {
+    border-top-color: #91ad3f;
+}
+
+.recurso-card .icone-recurso {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 15px;
+    background: var(--pista-ceu);
+}
+
+.recurso-card.amarelo .icone-recurso {
+    background: #fff0e9;
+}
+
+.recurso-card.verde .icone-recurso {
+    background: #f1f6dc;
 }
 
 .recurso-card h3 {
@@ -6044,5 +6199,120 @@ textarea:focus-visible {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* DESAFIO DIÁRIO E CLASSIFICAÇÃO GERAL */
+
+.podio-jogador {
+    border: 1px solid var(--pista-linha);
+    border-radius: 18px;
+    background: #fff;
+    color: var(--pista-noite);
+    box-shadow: 0 12px 30px rgba(16,43,63,0.08);
+}
+
+.podio-jogador.primeiro,
+.podio-jogador.segundo,
+.podio-jogador.terceiro {
+    background: #fff;
+}
+
+.podio-jogador.primeiro {
+    border-top: 4px solid var(--pista-lima);
+}
+
+.podio-jogador.segundo {
+    border-top: 4px solid #c5d5d6;
+}
+
+.podio-jogador.terceiro {
+    border-top: 4px solid #e1aa8a;
+}
+
+.medalha-ranking {
+    display: grid;
+    width: 54px;
+    height: 54px;
+    place-items: center;
+    border-radius: 16px;
+    background: var(--pista-ceu);
+    color: var(--pista-verde);
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.podio-jogador.primeiro .medalha-ranking {
+    background: #f1f6dc;
+    color: #587b1d;
+}
+
+.podio-jogador strong {
+    color: var(--pista-noite);
+}
+
+.podio-jogador > span:not(.medalha-ranking) {
+    color: var(--pista-verde);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.podio-jogador small {
+    color: var(--pista-muted);
+    font-size: 12px;
+}
+
+.ranking-vazio {
+    border: 1px solid var(--pista-linha);
+    background: #fff;
+    color: var(--pista-muted);
+}
+
+.demais-ranking h3 {
+    color: #f5f8f7;
+}
+
+.demais-ranking li {
+    align-items: center;
+    border: 1px solid var(--pista-linha);
+    background: #fff;
+    color: var(--pista-noite);
+}
+
+.demais-ranking li strong {
+    overflow-wrap: anywhere;
+}
+
+.demais-ranking li span {
+    color: var(--pista-verde);
+}
+
+@media (max-width: 800px) {
+    .pit-stop-grade {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .desafio-corrida-descricao {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 520px) {
+    .podio-ranking {
+        gap: 8px;
+    }
+
+    .podio-jogador {
+        padding: 18px 8px;
+    }
+
+    .podio-jogador small {
+        font-size: 10px;
+    }
+
+    .demais-ranking li {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
     }
 }

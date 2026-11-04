@@ -78,6 +78,31 @@ function chaveEstadoPermitida(string $chave): bool
     ) === 1;
 }
 
+function resumoDesafioCorrida(PDO $pdo, int $userId, string $hoje): array
+{
+    $consulta = $pdo->prepare(
+        'SELECT run_date FROM running_challenges WHERE user_id = ? ORDER BY run_date DESC'
+    );
+    $consulta->execute([$userId]);
+    $datas = $consulta->fetchAll(PDO::FETCH_COLUMN);
+    $sequencia = 0;
+    $dataEsperada = new DateTimeImmutable($hoje, new DateTimeZone('America/Sao_Paulo'));
+
+    foreach ($datas as $dataCorrida) {
+        if ((string) $dataCorrida !== $dataEsperada->format('Y-m-d')) {
+            break;
+        }
+        $sequencia++;
+        $dataEsperada = $dataEsperada->modify('-1 day');
+    }
+
+    return [
+        'concluidoHoje' => isset($datas[0]) && (string) $datas[0] === $hoje,
+        'totalDias' => count($datas),
+        'sequenciaDias' => $sequencia
+    ];
+}
+
 try {
     $configuracao = require __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
     $pdo = new PDO(
@@ -208,6 +233,46 @@ try {
 
     $conta = exigirSessao();
 
+    if ($acao === 'running:status' || $acao === 'running:complete') {
+        if (($acao === 'running:status' && $metodo !== 'GET') ||
+            ($acao === 'running:complete' && $metodo !== 'POST')) {
+            responder(405, ['ok' => false, 'mensagem' => 'Método não permitido para este desafio.']);
+        }
+        if ($conta['accountType'] !== 'aluno') {
+            responder(403, ['ok' => false, 'mensagem' => 'O desafio diário está disponível para contas de aluno.']);
+        }
+
+        $hoje = (new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo')))
+            ->format('Y-m-d');
+
+        if ($acao === 'running:status') {
+            responder(200, [
+                'ok' => true,
+                'hoje' => $hoje,
+                'desafio' => resumoDesafioCorrida($pdo, $conta['id'], $hoje)
+            ]);
+        }
+
+        $pdo->beginTransaction();
+        $inserir = $pdo->prepare(
+            'INSERT IGNORE INTO running_challenges (user_id, run_date, distance_meters) VALUES (?, ?, 1000)'
+        );
+        $inserir->execute([$conta['id'], $hoje]);
+        $registradoAgora = $inserir->rowCount() === 1;
+        if ($registradoAgora) {
+            $atualizarPontos = $pdo->prepare('UPDATE users SET points = points + 20 WHERE id = ?');
+            $atualizarPontos->execute([$conta['id']]);
+        }
+        $pdo->commit();
+
+        responder(200, [
+            'ok' => true,
+            'registradoAgora' => $registradoAgora,
+            'pontosRecebidos' => $registradoAgora ? 20 : 0,
+            'desafio' => resumoDesafioCorrida($pdo, $conta['id'], $hoje)
+        ]);
+    }
+
     if ($acao === 'state:read') {
         $consulta = $pdo->prepare('SELECT state_key, state_value FROM user_state WHERE user_id = ?');
         $consulta->execute([$conta['id']]);
@@ -235,9 +300,22 @@ try {
 
     if ($acao === 'ranking') {
         $consulta = $pdo->query(
-            'SELECT email, points AS pontos FROM users WHERE points > 0 ORDER BY points DESC, name ASC LIMIT 100'
+            "SELECT u.name AS nome, u.points AS pontos, COUNT(r.id) AS diasCorridos, "
+            . "COALESCE(SUM(r.distance_meters), 0) AS metrosCorridos "
+            . "FROM users u LEFT JOIN running_challenges r ON r.user_id = u.id "
+            . "WHERE u.account_type = 'aluno' "
+            . 'GROUP BY u.id, u.name, u.points '
+            . 'ORDER BY u.points DESC, metrosCorridos DESC, u.name ASC'
         );
-        responder(200, ['ok' => true, 'ranking' => $consulta->fetchAll()]);
+        $ranking = $consulta->fetchAll();
+        foreach ($ranking as &$jogador) {
+            $jogador['pontos'] = (int) $jogador['pontos'];
+            $jogador['diasCorridos'] = (int) $jogador['diasCorridos'];
+            $jogador['kmCorridos'] = (int) $jogador['metrosCorridos'] / 1000;
+            unset($jogador['metrosCorridos']);
+        }
+        unset($jogador);
+        responder(200, ['ok' => true, 'ranking' => $ranking]);
     }
 
     if ($acao === 'points:add') {
